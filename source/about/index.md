@@ -1,18 +1,18 @@
 ---
-title: 关于
+title: About
 date: 2023-05-12 12:01:43
 type : "about"
 ---
 
-### 关于我
+### About Me
 
 ----
 
-##### *大多数人都生活在平静的绝望中*
+##### *The mass of men lead lives of quiet desperation. What is called resignation is confirmed desperation. *
 
 ------
 
-半路出家的程序员，90后，游戏乐器电影技术均有涉猎。
+Halfway programmer, post-90s, game instrument film technology are involved
 
 
 

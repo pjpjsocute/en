@@ -5,38 +5,38 @@ author: Ray
 top: true
 cover: false
 date: 2023-05-12 16:13:50
-categories: 技术
+categories: technology
 tags: 
-  - 力扣之旅
+  - LeetCode
   - java
 ---
 
 ### Q:
 
-假设有打乱顺序的一群人站成一个队列，数组 `people` 表示队列中一些人的属性（不一定按顺序）。每个 `people[i] = [hi, ki]` 表示第 `i` 个人的身高为 `hi` ，前面 **正好** 有 `ki` 个身高大于或等于 `hi` 的人。
+You are given an array of people, `people`, which are the attributes of some people in a queue (not necessarily in order). Each `people[i] = [hi, ki]` represents the `ith` person of height `hi` with **exactly** `ki` other people in front who have a height greater than or equal to `hi`.
 
-请你重新构造并返回输入数组 `people` 所表示的队列。返回的队列应该格式化为数组 `queue` ，其中 `queue[j] = [hj, kj]` 是队列中第 `j` 个人的属性（`queue[0]` 是排在队列前面的人）。
+Reconstruct and return *the queue that is represented by the input array* `people`. The returned queue should be formatted as an array `queue`, where `queue[j] = [hj, kj]` is the attributes of the `jth` person in the queue (`queue[0]` is the person at the front of the queue).
 
 <!-- more -->
 
 #### Input:
 
 ```
-输入：people = [[7,0],[4,4],[7,1],[5,0],[6,1],[5,2]]
-输出：[[5,0],[7,0],[5,2],[6,1],[4,4],[7,1]]
-解释：
-编号为 0 的人身高为 5 ，没有身高更高或者相同的人排在他前面。
-编号为 1 的人身高为 7 ，没有身高更高或者相同的人排在他前面。
-编号为 2 的人身高为 5 ，有 2 个身高更高或者相同的人排在他前面，即编号为 0 和 1 的人。
-编号为 3 的人身高为 6 ，有 1 个身高更高或者相同的人排在他前面，即编号为 1 的人。
-编号为 4 的人身高为 4 ，有 4 个身高更高或者相同的人排在他前面，即编号为 0、1、2、3 的人。
-编号为 5 的人身高为 7 ，有 1 个身高更高或者相同的人排在他前面，即编号为 1 的人。
-因此 [[5,0],[7,0],[5,2],[6,1],[4,4],[7,1]] 是重新构造后的队列。
+Input: people = [[7,0],[4,4],[7,1],[5,0],[6,1],[5,2]]
+Output: [[5,0],[7,0],[5,2],[6,1],[4,4],[7,1]]
+Explanation:
+Person 0 has height 5 with no other people taller or the same height in front.
+Person 1 has height 7 with no other people taller or the same height in front.
+Person 2 has height 5 with two persons taller or the same height in front, which is person 0 and 1.
+Person 3 has height 6 with one person taller or the same height in front, which is person 1.
+Person 4 has height 4 with four people taller or the same height in front, which are people 0, 1, 2, and 3.
+Person 5 has height 7 with one person taller or the same height in front, which is person 1.
+Hence [[5,0],[7,0],[5,2],[6,1],[4,4],[7,1]] is the reconstructed queue.
 ```
 
 ### S:
 
-一个人有<h,k>2个属性，h代表高度，同样的高度的前提下，k大的人应该在后面。 为了确定<h,i>应该去哪，我们可以考虑倒排身高，这样前面有多少个比他高的人就已知了。 假设某个队列排到<h,i>，对于已插入的前面的人来说，身高都≥他，所以当他插入第i个位置的时候，对其他人是不产生影响的（因为当身高一致,i会正序排序）
+A person has 2 attributes , h stands for height, and the person with the same height should be behind the person with k greater. In order to determine where should go, we can consider ranking the heights backwards so that the number of people taller than him in front is known. Suppose some queue goes to , for the people who have been inserted in front of him, the heights are ≥ him, so when he is inserted in the ith position, it has no effect on the others (because when the heights are the same,i will be sorted in positive order)
 
 ```java
 class Solution {

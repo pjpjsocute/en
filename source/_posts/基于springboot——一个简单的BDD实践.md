@@ -1,9 +1,9 @@
 ---
-title: springboot+cucumber实践
+title: springboot+cucumber practice
 date: 2023-05-12 15:09:40
-categories: 技术
+categories: technology
 tags:
-  - 项目
+  - project
   - java
 ---
 
@@ -11,34 +11,33 @@ tags:
 
 ## why BDD
 
-- **满足业务目标。**
-- **关注用户需求**
-- **良好的可读性**
+- **Achieve business objectives."**
+- **Focus on user needs"**
+- **Good readability**
 
-其实对于我自己来说，也有其他原因：
+Actually, there are other reasons for me as well:
 
-1.因为客观原因，有时候项目开发结束后才拿到PRD，所以在开发前期，通过一些方式确定明确的业务流程会比直接上手开发可以更容易的发现问题。相比较DD文档，BDD的feature可能是对于非开发人员更易懂的方案。
-
-2.因为文档往往存在滞后，帮助将来的自己或是其他接手的同学去更快的回顾或是了解某个业务的诉求。
+1. Due to objective reasons, sometimes I only receive the PRD (Product Requirements Document) after the project development is completed. Therefore, in the early stages of development, it is easier to identify issues by establishing clear business processes through certain means rather than diving directly into development. Compared to traditional documentation (DD documents), BDD (Behavior-Driven Development) features may be easier for non-developers to understand.
+2. Documentation tends to lag behind, but it helps me or other colleagues who take over the project in the future to quickly review or understand the requirements of a particular business.
 
 <!-- more -->
 
-## 一个样例项目的开始
+## Sample Project Start
 
-#### 项目分层：
+#### Project stratification:
 
 ![WX20230512-151458@2x](基于springboot——一个简单的BDD实践/WX20230512-151458@2x.png)
 
-#### 代码：
+#### Code:
 
-以**功能配置**单上线操作为例
+Take **functional configuration** single upline operation as an example
 
-application中存在一个上线接口
+There is a go live interface in the application
 
 ```java
 class interface ConfigurationCmdService{
     /**
-     * 上线功能
+     * online
      *
      * @param cmd
      * @return
@@ -46,11 +45,11 @@ class interface ConfigurationCmdService{
     Result<Boolean>  online(ConfigOnlineCmd cmd);
 }
 /**
-* 接口需要实现上线功能
-* 假设操作只需要3步：
-*	1.查到需要上线的配置
-*   2.上线操作
-*   3.更新db
+* The interface needs to implement the on-line function
+* Assume that the operation requires only 3 steps:
+* 1. Find out the configuration that needs to go live
+* 2. Go live operation
+* 3. Update the db
 */
 class class ConfigurationCmdServiceImpl implements ConfigurationCmdService{
 	    
@@ -78,14 +77,14 @@ class class ConfigurationCmdServiceImpl implements ConfigurationCmdService{
 }
 ```
 
-## BDD的接入
+## BDD access
 
-### 前置工作
+### Preliminary work
 
-#### cucumber依赖
+#### cucumber dependency
 
 ```xml
-<!-- bdd依赖 -->
+<!-- bdd dependency -->
 <dependency>
   <groupId>io.cucumber</groupId>
   <artifactId>cucumber-core</artifactId>
@@ -105,7 +104,7 @@ class class ConfigurationCmdServiceImpl implements ConfigurationCmdService{
 </dependency>
 ```
 
-#### 结合junit4
+#### Combined with junit4
 
 ```xml
 <plugin>
@@ -129,7 +128,7 @@ class class ConfigurationCmdServiceImpl implements ConfigurationCmdService{
             </plugin>
 ```
 
-#### 结合jacoco生成单测报告
+#### Combine with jacoco to generate single test reports
 
 ```xml
 <plugin>
@@ -150,7 +149,7 @@ class class ConfigurationCmdServiceImpl implements ConfigurationCmdService{
       </goals>
       <configuration>
         <excludes>
-          <!-- -排掉工具类包 比方说，需要排出工具包-->
+          <!-- -Exclude the toolkit Let's say that the toolkit needs to be excluded-->
           <exclude>com.example.util.*</exclude>
         </excludes>
       </configuration>
@@ -161,11 +160,11 @@ class class ConfigurationCmdServiceImpl implements ConfigurationCmdService{
 
 
 
-### 第一步
+### First step
 
-启动类
+Start the class
 
-glue实际上是告诉cucumber启动后去扫描对应包下含有@CucumberContextConfiguration的文件
+glue actually tells cucumber to scan the file containing @CucumberContextConfiguration under the corresponding package when it starts
 
 ```java
 @RunWith(Cucumber.class)
@@ -179,9 +178,9 @@ public class ApplicationTest {
 }
 ```
 
-配置在测试中需要启动的bean以及一些需要去mock的bean、
+Configure the beans that need to be started in the test and some beans that need to be de-mocked,
 
-init方法在运行之前触发，reset方法见第四步
+The init method is triggered before running, and the reset method is shown in step 4
 
 ```java
 @CucumberContextConfiguration
@@ -205,24 +204,23 @@ public class SpringTest {
 
 
 
-### 第二步
+### Step 2
 
-在classpath:feature下新建一个feature文件
+Create a new feature file under classpath:feature
 
-\#language:zh-CN代表语言为中文
+\#language:zh-CN for Chinese language
 
 ```feature
-#language:zh-CN
-功能:配置的CMD操作
-  场景:上线一条配置
-    假设存在以下配置
+Feature:Configured crud operations
+  Scenario:Online a configuration
+    Given The following configurations exist
         |id  | content| status | bizCode |
         |1	 |xxxxx   | AUDIT  | XXXX    |
         |2	 |xxxxx   | DRAFT  | XXXX    |
-    当id为"1"上线
+    When id is "1" on line
         | languageType | bizCode |
         | zh_CN        | 008     |
-    那么id为"1"的配置状态为"上线中"
+    Then The configuration status of id "1" is "On-line"
 ```
 
 ### 第三步
@@ -252,36 +250,36 @@ public class ContentStep {
         }
     };
 
-    @假如("假设存在以下配置")
-    public void 存在以下内容(DataTable dataTable) {
-        //根据dataTable去创建一条内容
+    @Given("The following configurations exist")
+    public void The following configurations exist(DataTable dataTable) {
+        //Create contents based on dataTable
         List<Config> configs = ConfigTransform.transToConfig(dataTable.entries());
         contentRepository.createAll(configs);
     }
 
-    @那么("id为{string}的配置状态为{string}")
-    public void id为的配置状态为(String id,String status){
+    @Then("The configuration status of id {string} is {string}")
+    public void The_configuration_status_of_id_is(String id,String status){
         Config config = configRepository.queryById(id);
         //判断结果
         Assert.assertEquals(config.getStatus(),codeMap.get(status));
     }
 
-    @当("id为{string}上线")
-    public void 在id为的目录下插入一条内容(String id){
-        //创建命令
+    @When("id is {string} on line")
+    public void id_is_on_line(String id){
+        //Create command
         ContentCreateParam param = createOnlineCmd(id);
-        //获得结果
+        //Get Results
         result = cmdService.online(param).getData().toString();
     }
 ```
 
-### 第四步
+### Step 4
 
-mock db、外部服务。以mock db为例
+mock db, external services. Take mock db as an example
 
-DB使用一个map来模拟数据库操作
+DB uses a map to mock database operations
 
-reset操作用于清空map，每一条用例都会自动清空map。
+The reset operation is used to empty the map, and the map is automatically emptied for each use case.
 
 ```java
 public class FakeConfigRepositoryImpl implements SearchDataRepository ,Resetable{
@@ -297,7 +295,7 @@ public class FakeConfigRepositoryImpl implements SearchDataRepository ,Resetable
     }
 
     /**
-     * 创建数据
+     * Create Data
      *
      * @param config
      * @return
@@ -310,7 +308,7 @@ public class FakeConfigRepositoryImpl implements SearchDataRepository ,Resetable
     }
 
     /**
-     * 更新数据
+     * update
      *
      * @param searchData
      * @return
@@ -327,5 +325,5 @@ public class FakeConfigRepositoryImpl implements SearchDataRepository ,Resetable
     }
 ```
 
-spring-test和spring-context版本必须一致，否则会报错
+**spring-test and spring-context versions must be the same, otherwise it will report an error**
 

@@ -4,24 +4,24 @@ author: Ray
 top: true
 cover: false
 date: 2023-05-12 15:44:05
-categories: 技术
+categories: technology
 tags:
   - python
   - chatGpt
-  - 算法
+  - algorithm
 ---
 
 ### Target:
 
-由于工作时Confluence中的文件太多，也比较杂乱，难以阅读，所以希望基于chatGPT能够帮助我快速从文件中获取我想要的知识
+Since there are too many files in Confluence at work, which are also cluttered and difficult to read, I hope chatGPT-based can help me quickly get the knowledge I want from the files
 
 <!-- more -->
 
-以下是一个demo的代码，参考了GPT官网的做法
+Here is the code of a demo, referring to the GPT official website
 
 
 ```python
-##爬虫
+##crawler
 import requests
 import re
 import urllib.request
@@ -41,27 +41,27 @@ from openai.embeddings_utils import distances_from_embeddings, cosine_similarity
 import time
 
 
-# public 的账号 和confluence空间配置
+# public account and confluence space configuration
 domain = "confluence.xxxxx.com"
 full_url = "https://confluence.xxxxx.com/"
 login_url = "https://confluence.xxxxx.com/login.action?os_destination=%2Fdologin.action"
 page_url = "https://confluence.xxxxx.com/display/41JTSP/"
 user_name = "xxxx"
 password = "xxxx"
-# 定义要爬取的空间key，这是目前我们的空间
+# Define the space key to be crawled, which is currently our space
 space_key = "xxxx"
-##数据保存地址，请自定义
+##Data saving address, please customize
 filePath = ""
 processPath = ""
 
-##分隔符和替换符，主要用于文件名生成和标题还原
+##Separators and replacements, mainly for file name generation and title reduction
 splitFlag = "$"
 replaceFlag = "_"
 
 
 
 
-##设置openai环境
+##Setting up openai environment
 openai.organization = ""
 openai.api_key = ""
 ```
@@ -70,10 +70,10 @@ openai.api_key = ""
 ```python
 def crawler(base_url,username,password,space_key,totalSpace = False):
     confluence = Confluence(url=base_url, username=username, password=password)
-    ##待实现，爬取所有的space
-    ##获取对应空间
+    ##To be implemented, crawl all spaces
+    ##Get the corresponding space
     space = confluence.get_space(space_key, expand='description.plain,homepage')
-    ##获取space页面id
+    ##get space page id
     page_id = space["homepage"]["id"]
     
         # Create a directory to store the text files
@@ -84,10 +84,10 @@ def crawler(base_url,username,password,space_key,totalSpace = False):
     if not os.path.exists(processPath):
             os.mkdir(processPath)
     
-    ##子页面
+    ##subpage
     child = confluence.get_page_child_by_type(page_id, type='page', start=None, limit=None, expand=None)
     
-    ##初始化队列
+    ##init queue
     queue = deque()
     for i in child:
         queue.append(i)
@@ -95,13 +95,13 @@ def crawler(base_url,username,password,space_key,totalSpace = False):
     while queue:
         # Get the next URL from the queue
         childPage = queue.pop()
-        ##拿到页面id
+        ##get page id
         html = confluence.get_page_by_id(childPage["id"], expand="body.storage")
-        # 调用方法，将html转为纯文本
+        # html->text
         content = html["body"]["storage"]["value"]
         content_text = html2text.html2text(content)
         
-        ##文本不为空写入
+        ##insert not null
         if content_text.lstrip() != "":
             title = str(html["title"]).replace("/",replaceFlag)
     #         if not os.path.exists("/Users/lei.zhou/text/"+html["title"]):
@@ -109,7 +109,7 @@ def crawler(base_url,username,password,space_key,totalSpace = False):
             with open(filePath+ childPage["id"]+splitFlag+title+ ".txt", "w") as f:
                 f.write(content_text)
 
-        ##加入子节点‘
+        ##add sub point‘
         for i in confluence.get_page_child_by_type(childPage["id"], type='page', start=None, limit=None, expand=None):
             queue.append(i)
 
@@ -129,51 +129,51 @@ def create_context(
     question, df, max_len=1800, size="ada"
 ):
     """
-    寻找最相似的文本段
+    Find the most similar text segment
     """
     # Get the embeddings for the question
     q_embeddings = openai.Embedding.create(input=question, engine='text-embedding-ada-002')['data'][0]['embedding']
-    # 使用余弦算法计算最相似的文本
+    # Calculate the most similar text using the cosine algorithm
     df['distances'] = distances_from_embeddings(q_embeddings, df['embeddings'].values, distance_metric='cosine')
 
 
     returns = []
     cur_len = 0
 
-    # 不断添加文本到上限
+    # Keep adding text to the upper limit
     for i, row in df.sort_values('distances', ascending=True).iterrows():
         
-        # 文本创建
+        # Text creation
         cur_len += row['n_tokens'] + 4
         
-        # 超出上限退出
-        if cur_len > max_len:
+        # Exits when limit is exceeded
+        if cur_len > max_len.
             break
         
-        # 增加文本
+        # Add text
         returns.append(row["text"])
 
-    # 返回
+    
     return "\n\n###\n\n".join(returns)
 
 
-# token分割
+# token split
 def split_into_many(text, max_tokens = max_tokens):
 
-    # 定义分割符号，可以允许自定义
+    # Define segmentation symbols, allowing customization
     sentences = re.split('[.。！？!?]',text)
 
-    # 获取每段的token
+    # get token for each sentence
     n_tokens = [len(tokenizer.encode(" " + sentence)) for sentence in sentences]
     
     chunks = []
     tokens_so_far = 0
     chunk = []
 
-    # 遍历
+    
     for sentence, token in zip(sentences, n_tokens):
 
-        # 如果到目前为止的标记数量加上当前句子中的标记数量大于,大于最大标记数，则将该块添加到块的列表中，并重置到目前为止的块和标记数
+        # If the number of tokens so far plus the number of tokens in the current sentence is greater than,greater than the maximum number of tokens, the block is added to the list of blocks and the number of blocks and tokens so far is reset
         if tokens_so_far + token > max_tokens:
             chunks.append(". ".join(chunk) + ".")
             chunk = []
@@ -183,18 +183,18 @@ def split_into_many(text, max_tokens = max_tokens):
         if token > max_tokens:
             continue
 
-        # 添加
+        
         chunk.append(sentence)
         tokens_so_far += token + 1
 
     return chunks
 
 
-##数据，模型，问题，长度，
+
 def answer_question(
     df,
     model="text-davinci-003",
-    question="你有什么问题",
+    question="what's your problem",
     max_len=1800,
     size="ada",
     debug=False,
@@ -203,7 +203,7 @@ def answer_question(
     use_GPT=False
 ):
     """
-    回答问题
+    answer
     """
     context = create_context(
         question,
@@ -247,25 +247,23 @@ crawler(base_url,username,password,space_key)
 ```
 
 ```python
-#原始文本
+#Original Text
 texts=[]
 
-# 遍历
 for file in os.listdir(filePath):
-    # 文件读取
+    # file read
     with open(filePath+file, "r") as f:
         titles = file.split(splitFlag)
         if len(titles) <= 1:
             continue
         title = titles[1]
         text = f.read()
-        # 标题还原，把_替换为空格插入
+        # Title restore, replace _ with a space insert
         texts.append((title.replace(replaceFlag," "), text))
         
-# pd创建
 df = pd.DataFrame(texts, columns = ['fname', 'text'])
 
-# 按行分段
+# split by row
 df['text'] = df.fname + ". " + remove_newlines(df.text)
 df.to_csv('processed/scraped.csv')
 df.head()
@@ -437,7 +435,7 @@ df.n_tokens.hist()
 ```python
 shortened = []
 
-# 循环减少文本
+# Cyclic text reduction
 for row in df.iterrows():
     print(row)
 
@@ -462,8 +460,8 @@ df.n_tokens.hist()
 
 
 ```python
-##由于官方的限制，1分钟最多发起60个请求，所以为了防止报错此处主动休眠
-##由于数据量过大，如果无法运行，可以在上面一栏    截取部分数据df = df[0:x]  x为截取长度
+## Due to the official limit, a maximum of 60 requests initiated in 1 minute, so to prevent the reporting of errors here active hibernation
+## due to the amount of data is too large, if you can not run, you can intercept part of the data in the above column df = df[0:x] x is the interception length
 def cal(x,waittime = 0.6):
     res = openai.Embedding.create(input=x, engine='text-embedding-ada-002')['data'][0]['embedding']
     time.sleep(waittime)
@@ -527,7 +525,7 @@ df.head()
 
 
 ```python
-##读取token数据
+##read token
 df=pd.read_csv('processed/embeddings.csv', index_col=0)
 df['embeddings'] = df['embeddings'].apply(eval).apply(np.array)
 df.head()
@@ -583,7 +581,7 @@ df.head()
 
 
 ```python
-##输入最大token，返回长度进行提问
+##Enter the maximum token and return the length for questioning, here we use Chinese for testing to check the applicability of different languages
 answer_question(df, question="测试用例需要满足那些要求?", debug=False,use_GPT=True,max_len=1800,max_tokens = 1800)
 ```
 

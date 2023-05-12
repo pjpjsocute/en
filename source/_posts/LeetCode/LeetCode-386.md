@@ -4,41 +4,40 @@ author: Ray
 top: true
 cover: false
 date: 2023-05-12 15:31:09
-categories: 技术
+categories: technology
 tags: 
-  - 力扣之旅
+  - LeetCode
   - java
   - DFS
 ---
 
 ### Q：
 
-给你一个整数 `n` ，按字典序返回范围 `[1, n]` 内所有整数。
+Given an integer `n`, return all the numbers in the range `[1, n]` sorted in lexicographical order.
 
-你必须设计一个时间复杂度为 `O(n)` 且使用 `O(1)` 额外空间的算法。
+You must write an algorithm that runs in `O(n)` time and uses `O(1)` extra space. 
 
 <!-- more -->
 
 ### S：
 
-首先：字典序可以抽象为一棵树，如下图所示
+First: the dictionary order can be abstracted as a tree, as shown in the following figure
 
 ![1603875858-aRThUF-QQ20201028-170405@2x](LeetCode-386/1603875858-aRThUF-QQ20201028-170405@2x.png)
 
-所以，有小到大输出其实就是输出他的先序遍历
+So, there is a small to large output is actually the output of his prior traversal
 
-**参考二叉搜索树的先序遍历写法**
+**Reference to the prior-order traversal of the binary search tree write **
 
-​    1.递归：
+1. Recursion:
 
-​        此处不一样的是需要舍去头结点0，以1-9分别为根节点进行遍历输出：
+The difference here is the need to round off the head node 0, to 1-9 respectively as the root node for traversal output: 1:
 
-​            1.递归结束条件，当前结点＞n，则递归结束
+1. recursion end condition, the current node > n, the recursion ends
 
-​            2.将元素值添加进入res,遍历其10个兄弟结点，进入递归其子节点
+2. add the element value into res, traverse its 10 sibling nodes, enter the recursion of its child nodes
 
 ````java
-```java
 class Solution {
     public List<Integer> lexicalOrder(int n) {
         List<Integer> list = new ArrayList<>();
@@ -65,15 +64,19 @@ class Solution {
 
 ​    2.迭代:
 
-​	**tipp **：`while(curr%10==0) curr/=10;` 这行代码的目的是处理那些在字典序中应该提前结束的数字。
+\2. Iteration .
 
-例如，假设 `n` 是 130。我们在字典序中遍历时，应该是这样的顺序：1, 10, 11, ..., 19, 2, 20, ..., 29, ..., 13, 130, 14, ..., 19, 2, ..., 9。
+**tipp **: `while(curr%10==0) curr/=10;` The purpose of this line of code is to handle numbers that should end early in the dictionary order.
 
-当我们的 `curr` 变成 130 后，如果我们直接 `curr+=1`，那么 `curr` 就变成了 131，这显然是超过 `n` 的，而且不符合字典序。我们应该跳过所有 13x（x > 0）的数字，直接变成 14。
+For example, suppose `n` is 130. When we traverse through the dictionary order, it should be in this order: 1, 10, 11, ... , 19, 2, 20, ... , 19, 2, 20, ... , 29, ... , 13, 130, 14, ... , 19, 2, ... , 9.
 
-这就是 `while(curr%10==0) curr/=10;` 这行代码的目的：当 `curr` 的最后一位是 0（即 `curr%10==0`）时，我们应该退回到上一层（即 `curr/=10`）。在这个例子中，130 退回到 13，然后 `curr+=1` 变成 14，这样就符合字典序了。
+After our `curr` becomes 130, if we directly `curr+=1`, then `curr` becomes 131, which is obviously more than `n` and does not fit the dictionary order. We should skip all 13x (x > 0) numbers and just become 14.
 
-这样的处理能保证我们的遍历顺序始终是按照字典序进行的，即先遍历同一层的数，然后再遍历下一层的数。
+This is the purpose of the line `while(curr%10==0) curr/=10;`: 
+
+when the last digit of `curr` is 0 (i.e. `curr%10==0`), we should fall back to the previous level (i.e. `curr/=10`). In this example, 130 falls back to 13, and then `curr+=1` becomes 14, so that it is in dictionary order.
+
+This treatment ensures that our traversal order is always in dictionary order, i.e., we traverse 
 
        ```java
        class Solution {

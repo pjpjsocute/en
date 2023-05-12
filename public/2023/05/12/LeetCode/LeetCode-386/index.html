@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
@@ -20,19 +20,19 @@
     var CONFIG = {"hostname":"pjpjsocute.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Q：给你一个整数 n ，按字典序返回范围 [1, n] 内所有整数。 你必须设计一个时间复杂度为 O(n) 且使用 O(1) 额外空间的算法。">
+  <meta name="description" content="Q：Given an integer n, return all the numbers in the range [1, n] sorted in lexicographical order. You must write an algorithm that runs in O(n) time and uses O(1) extra space.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LeetCode-386">
 <meta property="og:url" content="http://pjpjsocute.github.io/2023/05/12/LeetCode/LeetCode-386/index.html">
 <meta property="og:site_name" content="Ray‘s Blog">
-<meta property="og:description" content="Q：给你一个整数 n ，按字典序返回范围 [1, n] 内所有整数。 你必须设计一个时间复杂度为 O(n) 且使用 O(1) 额外空间的算法。">
-<meta property="og:locale" content="zh_CN">
+<meta property="og:description" content="Q：Given an integer n, return all the numbers in the range [1, n] sorted in lexicographical order. You must write an algorithm that runs in O(n) time and uses O(1) extra space.">
+<meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://pjpjsocute.github.io/2023/05/12/LeetCode/LeetCode-386/1603875858-aRThUF-QQ20201028-170405@2x.png">
 <meta property="article:published_time" content="2023-05-12T07:31:09.000Z">
-<meta property="article:modified_time" content="2023-05-12T07:55:23.289Z">
+<meta property="article:modified_time" content="2023-05-12T14:31:17.000Z">
 <meta property="article:author" content="Ray zhou">
 <meta property="article:tag" content="java">
-<meta property="article:tag" content="力扣之旅">
+<meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="DFS">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://pjpjsocute.github.io/2023/05/12/LeetCode/LeetCode-386/1603875858-aRThUF-QQ20201028-170405@2x.png">
@@ -46,7 +46,7 @@
     sidebar: "",
     isHome : false,
     isPost : true,
-    lang   : 'zh-CN'
+    lang   : 'en'
   };
 </script>
 
@@ -90,7 +90,7 @@
     <header class="header" itemscope itemtype="http://schema.org/WPHeader">
       <div class="header-inner"><div class="site-brand-container">
   <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏">
+    <div class="toggle" aria-label="Toggle navigation bar">
       <span class="toggle-line toggle-line-first"></span>
       <span class="toggle-line toggle-line-middle"></span>
       <span class="toggle-line toggle-line-last"></span>
@@ -119,27 +119,32 @@
   <ul id="menu" class="main-menu menu">
         <li class="menu-item menu-item-home">
 
-    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+    <a href="/" rel="section"><i class="home fa-fw"></i>Home</a>
 
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
 
   </li>
         <li class="menu-item menu-item-about">
 
-    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-中文">
+
+    <a href="https://pjpjsocute.github.io/" rel="section"><i class="中文 fa-fw"></i>中文</a>
 
   </li>
   </ul>
@@ -169,7 +174,7 @@
     
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
     <link itemprop="mainEntityOfPage" href="http://pjpjsocute.github.io/2023/05/12/LeetCode/LeetCode-386/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -191,18 +196,18 @@
               <span class="post-meta-item-icon">
                 <i class="far fa-calendar"></i>
               </span>
-              <span class="post-meta-item-text">发表于</span>
+              <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="创建时间：2023-05-12 15:31:09 / 修改时间：15:55:23" itemprop="dateCreated datePublished" datetime="2023-05-12T15:31:09+08:00">2023-05-12</time>
+              <time title="Created: 2023-05-12 15:31:09 / Modified: 22:31:17" itemprop="dateCreated datePublished" datetime="2023-05-12T15:31:09+08:00">2023-05-12</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
-              <span class="post-meta-item-text">分类于</span>
+              <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+                  <a href="/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
                 </span>
             </span>
 
@@ -217,24 +222,32 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="Q："><a href="#Q：" class="headerlink" title="Q："></a>Q：</h3><p>给你一个整数 <code>n</code> ，按字典序返回范围 <code>[1, n]</code> 内所有整数。</p>
-<p>你必须设计一个时间复杂度为 <code>O(n)</code> 且使用 <code>O(1)</code> 额外空间的算法。</p>
+        <h3 id="Q："><a href="#Q：" class="headerlink" title="Q："></a>Q：</h3><p>Given an integer <code>n</code>, return all the numbers in the range <code>[1, n]</code> sorted in lexicographical order.</p>
+<p>You must write an algorithm that runs in <code>O(n)</code> time and uses <code>O(1)</code> extra space. </p>
 <span id="more"></span>
-<h3 id="S："><a href="#S：" class="headerlink" title="S："></a>S：</h3><p>首先：字典序可以抽象为一棵树，如下图所示</p>
+<h3 id="S："><a href="#S：" class="headerlink" title="S："></a>S：</h3><p>First: the dictionary order can be abstracted as a tree, as shown in the following figure</p>
 <p><img src="/2023/05/12/LeetCode/LeetCode-386/1603875858-aRThUF-QQ20201028-170405@2x.png" alt="1603875858-aRThUF-QQ20201028-170405@2x"></p>
-<p>所以，有小到大输出其实就是输出他的先序遍历</p>
-<p><strong>参考二叉搜索树的先序遍历写法</strong></p>
-<p>​    1.递归：</p>
-<p>​        此处不一样的是需要舍去头结点0，以1-9分别为根节点进行遍历输出：</p>
-<p>​            1.递归结束条件，当前结点＞n，则递归结束</p>
-<p>​            2.将元素值添加进入res,遍历其10个兄弟结点，进入递归其子节点</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">```java</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;Integer&gt; <span class="title function_">lexicalOrder</span><span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line">        List&lt;Integer&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt; <span class="number">10</span>; i++)&#123;</span><br><span class="line">             dfs(n, i, list);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span> n,<span class="type">int</span> i,List&lt;Integer&gt;list)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(i&gt;n)&#123;</span><br><span class="line">            <span class="keyword">return</span> ;</span><br><span class="line">        &#125;</span><br><span class="line">        list.add(i);</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;=<span class="number">9</span>;j++)&#123;</span><br><span class="line">            dfs(n,i*<span class="number">10</span>+j,list);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">```</span><br></pre></td></tr></table></figure>
+<p>So, there is a small to large output is actually the output of his prior traversal</p>
+<p><strong>Reference to the prior-order traversal of the binary search tree write </strong></p>
+<ol>
+<li>Recursion:</li>
+</ol>
+<p>The difference here is the need to round off the head node 0, to 1-9 respectively as the root node for traversal output: 1:</p>
+<ol>
+<li><p>recursion end condition, the current node &gt; n, the recursion ends</p>
+</li>
+<li><p>add the element value into res, traverse its 10 sibling nodes, enter the recursion of its child nodes</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;Integer&gt; <span class="title function_">lexicalOrder</span><span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line">        List&lt;Integer&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">1</span>; i &lt; <span class="number">10</span>; i++)&#123;</span><br><span class="line">             dfs(n, i, list);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">dfs</span><span class="params">(<span class="type">int</span> n,<span class="type">int</span> i,List&lt;Integer&gt;list)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(i&gt;n)&#123;</span><br><span class="line">            <span class="keyword">return</span> ;</span><br><span class="line">        &#125;</span><br><span class="line">        list.add(i);</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> j=<span class="number">0</span>;j&lt;=<span class="number">9</span>;j++)&#123;</span><br><span class="line">            dfs(n,i*<span class="number">10</span>+j,list);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">```</span><br></pre></td></tr></table></figure>
 <p>​    2.迭代:</p>
-<p>​    <strong>tipp </strong>：<code>while(curr%10==0) curr/=10;</code> 这行代码的目的是处理那些在字典序中应该提前结束的数字。</p>
-<p>例如，假设 <code>n</code> 是 130。我们在字典序中遍历时，应该是这样的顺序：1, 10, 11, …, 19, 2, 20, …, 29, …, 13, 130, 14, …, 19, 2, …, 9。</p>
-<p>当我们的 <code>curr</code> 变成 130 后，如果我们直接 <code>curr+=1</code>，那么 <code>curr</code> 就变成了 131，这显然是超过 <code>n</code> 的，而且不符合字典序。我们应该跳过所有 13x（x &gt; 0）的数字，直接变成 14。</p>
-<p>这就是 <code>while(curr%10==0) curr/=10;</code> 这行代码的目的：当 <code>curr</code> 的最后一位是 0（即 <code>curr%10==0</code>）时，我们应该退回到上一层（即 <code>curr/=10</code>）。在这个例子中，130 退回到 13，然后 <code>curr+=1</code> 变成 14，这样就符合字典序了。</p>
-<p>这样的处理能保证我们的遍历顺序始终是按照字典序进行的，即先遍历同一层的数，然后再遍历下一层的数。</p>
+<p>\2. Iteration .</p>
+<p><strong>tipp </strong>: <code>while(curr%10==0) curr/=10;</code> The purpose of this line of code is to handle numbers that should end early in the dictionary order.</p>
+<p>For example, suppose <code>n</code> is 130. When we traverse through the dictionary order, it should be in this order: 1, 10, 11, … , 19, 2, 20, … , 19, 2, 20, … , 29, … , 13, 130, 14, … , 19, 2, … , 9.</p>
+<p>After our <code>curr</code> becomes 130, if we directly <code>curr+=1</code>, then <code>curr</code> becomes 131, which is obviously more than <code>n</code> and does not fit the dictionary order. We should skip all 13x (x &gt; 0) numbers and just become 14.</p>
+<p>This is the purpose of the line <code>while(curr%10==0) curr/=10;</code>: </p>
+<p>when the last digit of <code>curr</code> is 0 (i.e. <code>curr%10==0</code>), we should fall back to the previous level (i.e. <code>curr/=10</code>). In this example, 130 falls back to 13, and then <code>curr+=1</code> becomes 14, so that it is in dictionary order.</p>
+<p>This treatment ensures that our traversal order is always in dictionary order, i.e., we traverse </p>
 <pre><code><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">     <span class="keyword">public</span> List&lt;Integer&gt; <span class="title function_">lexicalOrder</span><span class="params">(<span class="type">int</span> n)</span> &#123;</span><br><span class="line">         List&lt;Integer&gt; list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">         <span class="type">int</span> <span class="variable">curr</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">         <span class="comment">// 遍历/traverse</span></span><br><span class="line">         <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;n;i++)&#123;</span><br><span class="line">             list.add(curr);</span><br><span class="line">             <span class="keyword">if</span>(curr*<span class="number">10</span>&lt;=n)&#123;</span><br><span class="line">                 curr*=<span class="number">10</span>;<span class="comment">//遍历下一层/find next level number</span></span><br><span class="line">             &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                 <span class="keyword">if</span>(curr&gt;=n)   curr/=<span class="number">10</span>;<span class="comment">//如果比n大，结束遍历退回上一层/If greater than n, end traversal and return to previous level</span></span><br><span class="line">                 curr+=<span class="number">1</span>;</span><br><span class="line">                 <span class="keyword">while</span>(curr%<span class="number">10</span>==<span class="number">0</span>) curr/=<span class="number">10</span>;</span><br><span class="line">             &#125;</span><br><span class="line">         &#125;</span><br><span class="line">         <span class="keyword">return</span> list;</span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 </code></pre>
     </div>
@@ -246,7 +259,7 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/java/" rel="tag"># java</a>
-              <a href="/tags/%E5%8A%9B%E6%89%A3%E4%B9%8B%E6%97%85/" rel="tag"># 力扣之旅</a>
+              <a href="/tags/LeetCode/" rel="tag"># LeetCode</a>
               <a href="/tags/DFS/" rel="tag"># DFS</a>
           </div>
 
@@ -312,10 +325,10 @@
 
       <ul class="sidebar-nav motion-element">
         <li class="sidebar-nav-toc">
-          文章目录
+          Table of Contents
         </li>
         <li class="sidebar-nav-overview">
-          站点概览
+          Overview
         </li>
       </ul>
 
@@ -336,20 +349,20 @@
           <a href="/archives/">
         
           <span class="site-state-item-count">9</span>
-          <span class="site-state-item-name">日志</span>
+          <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">2</span>
-        <span class="site-state-item-name">分类</span></a>
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">11</span>
-        <span class="site-state-item-name">标签</span></a>
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>
@@ -381,7 +394,7 @@
   </span>
   <span class="author" itemprop="copyrightHolder">Ray zhou</span>
 </div>
-  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
   </div>
 
         
