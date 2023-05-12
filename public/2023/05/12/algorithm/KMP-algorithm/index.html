@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"pjpjsocute.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="KMP算法:​    KMP (Knuth-Morris-Pratt) 算法是一种用于字符串搜索的算法，可以在一个文本串S内查找一个词W的出现位置。 基本思想是，当子串与目标字符串不匹配时，其已知足够的信息能确定下一步的搜索不会导致目标字符串的漏检。这样，算法就不会进行无效的检查。 下面是KMP算法的步骤：  构造一个”部分匹配表”（也称为 “失败函数”）。这是一个数组，对于给定的查找词，表中的每">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KMP algorithm">
+<meta property="og:url" content="http://pjpjsocute.github.io/2023/05/12/algorithm/KMP-algorithm/index.html">
+<meta property="og:site_name" content="Ray‘s Blog">
+<meta property="og:description" content="KMP算法:​    KMP (Knuth-Morris-Pratt) 算法是一种用于字符串搜索的算法，可以在一个文本串S内查找一个词W的出现位置。 基本思想是，当子串与目标字符串不匹配时，其已知足够的信息能确定下一步的搜索不会导致目标字符串的漏检。这样，算法就不会进行无效的检查。 下面是KMP算法的步骤：  构造一个”部分匹配表”（也称为 “失败函数”）。这是一个数组，对于给定的查找词，表中的每">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://pjpjsocute.github.io/2023/05/12/algorithm/KMP-algorithm/1677815997905-1cc35396-f8b9-4cd8-9eeb-e583c804f942.jpeg">
+<meta property="og:image" content="http://pjpjsocute.github.io/2023/05/12/algorithm/KMP-algorithm/1677830257055-487dcd00-8b04-4467-a430-34fbb1285c8e.jpeg">
+<meta property="og:image" content="http://pjpjsocute.github.io/2023/05/12/algorithm/KMP-algorithm/1677816850922-c3abca12-6649-486d-b8aa-71139dcbc716.jpeg">
+<meta property="og:image" content="http://pjpjsocute.github.io/2023/05/12/algorithm/KMP-algorithm/1677827701314-03d97a1b-a666-4268-b392-cfa46e8bb70c.jpeg">
+<meta property="og:image" content="http://pjpjsocute.github.io/2023/05/12/algorithm/KMP-algorithm/1677829808221-92178aa3-0c00-4c60-af02-dc14e6752b5b.jpeg">
+<meta property="article:published_time" content="2023-05-12T07:44:17.000Z">
+<meta property="article:modified_time" content="2023-05-12T08:09:07.607Z">
+<meta property="article:author" content="Ray zhou">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="算法">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://pjpjsocute.github.io/2023/05/12/algorithm/KMP-algorithm/1677815997905-1cc35396-f8b9-4cd8-9eeb-e583c804f942.jpeg">
+
+<link rel="canonical" href="http://pjpjsocute.github.io/2023/05/12/algorithm/KMP-algorithm/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>KMP algorithm | Ray‘s Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Ray‘s Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://pjpjsocute.github.io/2023/05/12/algorithm/KMP-algorithm/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Ray zhou">
+      <meta itemprop="description" content="My bolg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ray‘s Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          KMP algorithm
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-05-12 15:44:17 / 修改时间：16:09:07" itemprop="dateCreated datePublished" datetime="2023-05-12T15:44:17+08:00">2023-05-12</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h3 id="KMP算法"><a href="#KMP算法" class="headerlink" title="KMP算法:"></a>KMP算法:</h3><p>​    KMP (Knuth-Morris-Pratt) 算法是一种用于字符串搜索的算法，可以在一个文本串S内查找一个词W的出现位置。</p>
+<p>基本思想是，当子串与目标字符串不匹配时，其已知足够的信息能确定下一步的搜索不会导致目标字符串的漏检。这样，算法就不会进行无效的检查。</p>
+<p>下面是KMP算法的步骤：</p>
+<ol>
+<li>构造一个”部分匹配表”（也称为 “失败函数”）。这是一个数组，对于给定的查找词，表中的每个元素都包含了当匹配失败时查找词应该跳转的位置。</li>
+<li>使用这个表来进行字符串搜索。当在文本串中发生匹配失败时，可以直接跳过前面已知不会匹配的部分。</li>
+</ol>
+<span id="more"></span>
+<h3 id="Why-KMP"><a href="#Why-KMP" class="headerlink" title="Why KMP"></a>Why KMP</h3><p>​    传统的字符串匹配，如果从String[i]的比较失败，算法直接开始尝试从S[i+1]进行比较。这种行为是典型的 “不从以前的错误中学习”。我们应该注意到，一个失败的匹配将为我们提供有价值的信息–<strong>如果String[i : i+len(P)]和P之间的匹配在第r个位置失败，那么从S[i]：第一个（r-1）连续字符必须与P的第一个（r-1）字符完全相同</strong>。</p>
+<p><img src="/2023/05/12/algorithm/KMP-algorithm/1677815997905-1cc35396-f8b9-4cd8-9eeb-e583c804f942.jpeg" alt></p>
+<p>​    因此，我们可以尽可能地跳过这些不可能的字符串来优化我们的方法。<br>举个例子：</p>
+<p><img src="/2023/05/12/algorithm/KMP-algorithm/1677830257055-487dcd00-8b04-4467-a430-34fbb1285c8e.jpeg" alt></p>
+<p>​    首先，P[5]未能匹配，那么这意味着S[0:5]等于P[0:5]，也就是 “abcab”。<br>现在我们考虑：从S[1]，S[2]，S[3]最初的匹配尝试是否有机会成功？<br>当我们从S[1]开始时，它不会成功。因为我们可以看到：P[1]！=P[0]，但P[1]=S[1]，所以P[0]！=S[1]。<br>在S[2]中也是如此。<br>但是当我们从S[3]开始时（这很重要）： <strong>P[0] = P[3], S[3] = P[3], 所以P[0] = S[3].</strong><br>我们可以发现，在S[3]中，有可能匹配成功。而且我们会发现，如果知道S和P在长度L内是相同的，那么任何一个i是否可以作为匹配的起点，只取决于P[0]=P[i]是否相等。这里我们可以得到KMP算法的核心下一个数组</p>
+<h3 id="NextArray"><a href="#NextArray" class="headerlink" title="NextArray"></a>NextArray</h3><p>​    下一个数组是用于模式字符串。P的下一个数组定义为：： <strong>next[i]代表P[0]~P[i]的一个子串，因此前k个字符正好等于后k个字符的最大k。特别是，k不能是i+1 </strong>(因为这个子串总共只有i+1个字符，它必须等于它自己，所以它没有意义)。 <strong>事实上，它是为了得到不同起点i时P串中最长的相同前缀和后缀的最大长度</strong>。</p>
+<p><img src="/2023/05/12/algorithm/KMP-algorithm/1677816850922-c3abca12-6649-486d-b8aa-71139dcbc716.jpeg" alt></p>
+<h3 id="匹配"><a href="#匹配" class="headerlink" title="匹配"></a>匹配</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> i=<span class="number">0</span>;</span><br><span class="line"><span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">getNext(needle,next);</span><br><span class="line"><span class="keyword">while</span> (i &lt; length &amp;&amp; j &lt; length1)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (j == -<span class="number">1</span> || haystack.charAt(i) == needle.charAt(j))</span><br><span class="line">    &#123;</span><br><span class="line">        i++;</span><br><span class="line">        j++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        j = next[j];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/2023/05/12/algorithm/KMP-algorithm/1677827701314-03d97a1b-a666-4268-b392-cfa46e8bb70c.jpeg" alt></p>
+<h4 id="首先：我们使用两个点来捕捉字符串。问题是如何改变这个点？"><a href="#首先：我们使用两个点来捕捉字符串。问题是如何改变这个点？" class="headerlink" title="首先：我们使用两个点来捕捉字符串。问题是如何改变这个点？"></a>首先：我们使用两个点来捕捉字符串。问题是如何改变这个点？</h4><h4 id="第二："><a href="#第二：" class="headerlink" title="第二："></a>第二：</h4><pre><code>String[i] != P [j] ,现在我们需要改变j来找到一个新的开始，即String的前缀等同于P。所以，下一个数组是有用的：` j = next[j]`。
+</code></pre><h3 id="如何获得下一个数组"><a href="#如何获得下一个数组" class="headerlink" title="如何获得下一个数组"></a>如何获得下一个数组</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> <span class="title function_">getNext</span><span class="params">(String p, <span class="type">int</span> [] next)</span></span><br><span class="line">    &#123;</span><br><span class="line">        next[<span class="number">0</span>] = -<span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>, j = -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (i &lt; (p.length()))&#123;</span><br><span class="line">            <span class="keyword">if</span> (j == -<span class="number">1</span> || p.charAt(i)==p.charAt(j)) &#123;</span><br><span class="line">                ++i;</span><br><span class="line">                ++j;</span><br><span class="line">                next[i] = j;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                j = next[j];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><strong>这段代码使用了一个小技巧：使next[0]=-1.你可以记住它，这将使代码更加容易；</strong></p>
+<h3 id="动态规划："><a href="#动态规划：" class="headerlink" title="动态规划："></a>动态规划：</h3><p>next[i]是指p[0,next[i]]=p[i-next[i],i]的最大值(i)<br>那么，如果我们知道next[0],next[1],…next[i-1]，如何知道next[i]？<br>设置<code>next[i-1] = pre</code>。<br>如果<code>p[i]=p[pre+1]</code>，这意味着<code>下一个[i]=pre+1</code>。<br>否则如果<code>p[i] != p[pre+1],</code>就意味着<code>p[i-pre-1,i-1] = p[pre-1]</code>。<br>我们应该减少pre:<code>pre = next[pre]</code>。</p>
+<p><img src="/2023/05/12/algorithm/KMP-algorithm/1677829808221-92178aa3-0c00-4c60-af02-dc14e6752b5b.jpeg" alt></p>
+<h3 id="Code"><a href="#Code" class="headerlink" title="Code:"></a>Code:</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * now we can use kmp algorithm，a prefix matching algorithm</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">strStr</span><span class="params">(String haystack, String needle)</span>&#123;</span><br><span class="line">        <span class="comment">//in first method,we can find that we need match all the substring if it&#x27;s not match.</span></span><br><span class="line">        <span class="comment">//some message have been lost: the prefix of the last string we have compared.</span></span><br><span class="line">        <span class="comment">//we can start with the same prefix string to match,so that the time can be saved</span></span><br><span class="line">        <span class="comment">// we can store the same prefix in a array or list, so we called kmp algorithm</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">length</span> <span class="operator">=</span> haystack.length();</span><br><span class="line">        <span class="type">int</span> <span class="variable">length1</span> <span class="operator">=</span> needle.length();</span><br><span class="line">        <span class="type">int</span> i=<span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="type">int</span> [] next = <span class="keyword">new</span> <span class="title class_">int</span> [length1];</span><br><span class="line">        getNext(needle,next);</span><br><span class="line">        <span class="keyword">while</span> (i &lt; length &amp;&amp; j &lt; length1)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">if</span> (j == -<span class="number">1</span> || haystack.charAt(i) == needle.charAt(j))</span><br><span class="line">            &#123;</span><br><span class="line">                i++;</span><br><span class="line">                j++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                j = next[j];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (j == length1)&#123;</span><br><span class="line">            <span class="keyword">return</span> i - j;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">getNext</span><span class="params">(String p, <span class="type">int</span> [] next)</span></span><br><span class="line">    &#123;</span><br><span class="line">        next[<span class="number">0</span>] = -<span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>, j = -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span> (i &lt; (p.length()))&#123;</span><br><span class="line">            <span class="keyword">if</span> (j == -<span class="number">1</span> || p.charAt(i)==p.charAt(j)) &#123;</span><br><span class="line">                ++i;</span><br><span class="line">                ++j;</span><br><span class="line">                next[i] = j;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">else</span> &#123;</span><br><span class="line">                j = next[j];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/java/" rel="tag"># java</a>
+              <a href="/tags/%E7%AE%97%E6%B3%95/" rel="tag"># 算法</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/05/12/algorithm/chatGPT-with-confluence/" rel="prev" title="chatGPT with confluence">
+      <i class="fa fa-chevron-left"></i> chatGPT with confluence
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/05/12/LeetCode/LeetCode-406/" rel="next" title="LeetCode-406">
+      LeetCode-406 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#KMP%E7%AE%97%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">KMP算法:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Why-KMP"><span class="nav-number">2.</span> <span class="nav-text">Why KMP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NextArray"><span class="nav-number">3.</span> <span class="nav-text">NextArray</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8C%B9%E9%85%8D"><span class="nav-number">4.</span> <span class="nav-text">匹配</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%A6%96%E5%85%88%EF%BC%9A%E6%88%91%E4%BB%AC%E4%BD%BF%E7%94%A8%E4%B8%A4%E4%B8%AA%E7%82%B9%E6%9D%A5%E6%8D%95%E6%8D%89%E5%AD%97%E7%AC%A6%E4%B8%B2%E3%80%82%E9%97%AE%E9%A2%98%E6%98%AF%E5%A6%82%E4%BD%95%E6%94%B9%E5%8F%98%E8%BF%99%E4%B8%AA%E7%82%B9%EF%BC%9F"><span class="nav-number">4.1.</span> <span class="nav-text">首先：我们使用两个点来捕捉字符串。问题是如何改变这个点？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%EF%BC%9A"><span class="nav-number">4.2.</span> <span class="nav-text">第二：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%8E%B7%E5%BE%97%E4%B8%8B%E4%B8%80%E4%B8%AA%E6%95%B0%E7%BB%84"><span class="nav-number">5.</span> <span class="nav-text">如何获得下一个数组</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%EF%BC%9A"><span class="nav-number">6.</span> <span class="nav-text">动态规划：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Code"><span class="nav-number">7.</span> <span class="nav-text">Code:</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Ray zhou</p>
+  <div class="site-description" itemprop="description">My bolg</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ray zhou</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
