@@ -4,10 +4,10 @@ author: Ray
 top: true
 cover: false
 date: 2023-05-12 15:44:17
-categories: 技术
+categories: technology
 tags:
   - java
-  - 算法
+  - algorithm
 ---
 
 ### KMP:
