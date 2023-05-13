@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"pjpjsocute.github.io","root":"/en/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"pjpjsocute.github.io","root":"/en/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="Q:You are given an integer array nums and an integer k. You can partition the array into at most k non-empty adjacent subarrays. The score of a partition is the sum of the averages of each subarray. N">
@@ -31,8 +31,8 @@
 <meta property="article:modified_time" content="2023-05-12T16:29:46.088Z">
 <meta property="article:author" content="Ray zhou">
 <meta property="article:tag" content="java">
-<meta property="article:tag" content="Data structures">
 <meta property="article:tag" content="LeetCode">
+<meta property="article:tag" content="Data structures">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://pjpjsocute.github.io/en/2023/05/13/LeetCode/LeetCode-813/">
@@ -145,6 +145,11 @@
     <a href="https://pjpjsocute.github.io/" rel="section"><i class="中文 fa-fw"></i>中文</a>
 
   </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/en/guestbook/" rel="section"><i class="comments fa-fw"></i>Message Board</a>
+
+  </li>
   </ul>
 </nav>
 
@@ -210,6 +215,20 @@
             </span>
 
           
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/en/2023/05/13/LeetCode/LeetCode-813/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/en/2023/05/13/LeetCode/LeetCode-813/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
 
         </div>
       </header>
@@ -241,8 +260,8 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/en/tags/java/" rel="tag"># java</a>
-              <a href="/en/tags/Data-structures/" rel="tag"># Data structures</a>
               <a href="/en/tags/LeetCode/" rel="tag"># LeetCode</a>
+              <a href="/en/tags/Data-structures/" rel="tag"># Data structures</a>
           </div>
 
         
@@ -267,6 +286,7 @@
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -481,6 +501,35 @@
     
 
   
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'tHsqv8rp8m3NFxGeqNYcSMkI-MdYXbMMI',
+      appKey     : 'Ly0JgGKm82bkdfXMxPbisC2p',
+      placeholder: "Enter your comments",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'en' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : 'https://thsqv8rp.api.lncldglobal.com'
+    });
+  }, window.Valine);
+});
+</script>
 
 </body>
 </html>
