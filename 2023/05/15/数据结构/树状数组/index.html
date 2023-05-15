@@ -20,30 +20,39 @@
     var CONFIG = {"hostname":"pjpjsocute.github.io","root":"/en/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="My bolg">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Ray‘s Blog">
-<meta property="og:url" content="http://pjpjsocute.github.io/en/index.html">
+  <meta name="description" content="树状数组与力扣中的应用 为什么会需要树状数组 思考以下问题  QA: 假设存在一个整数序列input，例如intput &#x3D; [1,2,7,4,3]，要求前K个数的和。 Sulotion: 一般我们会求一个前缀和数组preSumArray,其中preSumArray[i]代表前i个数的和，这样我们求前N个数的和只需要返回preSumArray[N]， 时间复杂度为O(1),如果需要查询K次，则复杂度">
+<meta property="og:type" content="article">
+<meta property="og:title" content="树状数组">
+<meta property="og:url" content="http://pjpjsocute.github.io/en/2023/05/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/index.html">
 <meta property="og:site_name" content="Ray‘s Blog">
-<meta property="og:description" content="My bolg">
+<meta property="og:description" content="树状数组与力扣中的应用 为什么会需要树状数组 思考以下问题  QA: 假设存在一个整数序列input，例如intput &#x3D; [1,2,7,4,3]，要求前K个数的和。 Sulotion: 一般我们会求一个前缀和数组preSumArray,其中preSumArray[i]代表前i个数的和，这样我们求前N个数的和只需要返回preSumArray[N]， 时间复杂度为O(1),如果需要查询K次，则复杂度">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://pjpjsocute.github.io/en/2023/05/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/WX20230515-152510@2x.png">
+<meta property="og:image" content="http://pjpjsocute.github.io/en/2023/05/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/WX20230515-152510@2x.png">
+<meta property="article:published_time" content="2023-05-15T03:30:14.000Z">
+<meta property="article:modified_time" content="2023-05-15T08:53:33.459Z">
 <meta property="article:author" content="Ray zhou">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="树状数组">
+<meta property="article:tag" content="力扣之旅">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://pjpjsocute.github.io/en/2023/05/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/WX20230515-152510@2x.png">
 
-<link rel="canonical" href="http://pjpjsocute.github.io/en/">
+<link rel="canonical" href="http://pjpjsocute.github.io/en/2023/05/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'en'
   };
 </script>
 
-  <title>Ray‘s Blog</title>
+  <title>树状数组 | Ray‘s Blog</title>
   
 
 
@@ -166,9 +175,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
@@ -184,10 +194,9 @@
       <meta itemprop="name" content="Ray‘s Blog">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/en/2023/05/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/" class="post-title-link" itemprop="url">树状数组</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          树状数组
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -234,7 +243,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="树状数组与力扣中的应用"><a href="#树状数组与力扣中的应用" class="headerlink" title="树状数组与力扣中的应用"></a>树状数组与力扣中的应用</h2><ul>
+        <h2 id="树状数组与力扣中的应用"><a href="#树状数组与力扣中的应用" class="headerlink" title="树状数组与力扣中的应用"></a>树状数组与力扣中的应用</h2><ul>
 <li><h3 id="为什么会需要树状数组"><a href="#为什么会需要树状数组" class="headerlink" title="为什么会需要树状数组"></a>为什么会需要树状数组</h3><ul>
 <li><h4 id="思考以下问题"><a href="#思考以下问题" class="headerlink" title="思考以下问题"></a>思考以下问题</h4></li>
 </ul>
@@ -346,875 +355,43 @@
 </ul>
 <pre><code>- #### 类似的问题还有LeetCode-307 .etc
 </code></pre>
-      
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/en/tags/java/" rel="tag"># java</a>
+              <a href="/en/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"># 数据结构</a>
+              <a href="/en/tags/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/" rel="tag"># 树状数组</a>
+              <a href="/en/tags/%E5%8A%9B%E6%89%A3%E4%B9%8B%E6%97%85/" rel="tag"># 力扣之旅</a>
+          </div>
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://pjpjsocute.github.io/en/2023/05/13/LeetCode/LeetCode-813/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/en/images/avatar.gif">
-      <meta itemprop="name" content="Ray zhou">
-      <meta itemprop="description" content="My bolg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ray‘s Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/en/2023/05/13/LeetCode/LeetCode-813/" class="post-title-link" itemprop="url">According to LeetCode_813,How to use a recursion to dp</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2023-05-13 16:14:10 / Modified: 00:29:46" itemprop="dateCreated datePublished" datetime="2023-05-13T16:14:10+08:00">2023-05-13</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/en/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine: </span>
-    
-    <a title="valine" href="/en/2023/05/13/LeetCode/LeetCode-813/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/en/2023/05/13/LeetCode/LeetCode-813/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Q"><a href="#Q" class="headerlink" title="Q:"></a>Q:</h3><p>You are given an integer array <code>nums</code> and an integer <code>k</code>. You can partition the array into <strong>at most</strong> <code>k</code> non-empty adjacent subarrays. The <strong>score</strong> of a partition is the sum of the averages of each subarray.</p>
-<p>Note that the partition must use every integer in <code>nums</code>, and that the score is not necessarily an integer.</p>
-<p>Return <em>the maximum <strong>score</strong> you can achieve of all the possible partitions</em>. Answers within <code>10-6</code> of the actual answer will be accepted.</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/en/2023/05/13/LeetCode/LeetCode-813/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://pjpjsocute.github.io/en/2023/05/12/LeetCode/LeetCode-381/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/en/images/avatar.gif">
-      <meta itemprop="name" content="Ray zhou">
-      <meta itemprop="description" content="My bolg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ray‘s Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/en/2023/05/12/LeetCode/LeetCode-381/" class="post-title-link" itemprop="url">LeetCode-381</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-05-12 17:14:10" itemprop="dateCreated datePublished" datetime="2023-05-12T17:14:10+08:00">2023-05-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-05-13 00:30:00" itemprop="dateModified" datetime="2023-05-13T00:30:00+08:00">2023-05-13</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/en/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine: </span>
-    
-    <a title="valine" href="/en/2023/05/12/LeetCode/LeetCode-381/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/en/2023/05/12/LeetCode/LeetCode-381/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Q"><a href="#Q" class="headerlink" title="Q:"></a>Q:</h3><p><code>RandomizedCollection</code> is a data structure that contains a collection of numbers, possibly duplicates (i.e., a multiset). It should support inserting and removing specific elements and also reporting a random element.</p>
-<p>Implement the <code>RandomizedCollection</code> class:</p>
-<ul>
-<li><code>RandomizedCollection()</code> Initializes the empty <code>RandomizedCollection</code> object.</li>
-<li><code>bool insert(int val)</code> Inserts an item <code>val</code> into the multiset, even if the item is already present. Returns <code>true</code> if the item is not present, <code>false</code> otherwise.</li>
-<li><code>bool remove(int val)</code> Removes an item <code>val</code> from the multiset if present. Returns <code>true</code> if the item is present, <code>false</code> otherwise. Note that if <code>val</code> has multiple occurrences in the multiset, we only remove one of them.</li>
-<li><code>int getRandom()</code> Returns a random element from the current multiset of elements. The probability of each element being returned is <strong>linearly related</strong> to the number of the same values the multiset contains.</li>
-</ul>
-<p>You must implement the functions of the class such that each function works on <strong>average</strong> <code>O(1)</code> time complexity.</p>
-<p><strong>Note:</strong> The test cases are generated such that <code>getRandom</code> will only be called if there is <strong>at least one</strong> item in the <code>RandomizedCollection</code>.</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/en/2023/05/12/LeetCode/LeetCode-381/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/en/2023/05/13/LeetCode/LeetCode-813/" rel="prev" title="According to LeetCode_813,How to use a recursion to dp">
+      <i class="fa fa-chevron-left"></i> According to LeetCode_813,How to use a recursion to dp
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
       </footer>
+    
   </article>
   
   
   
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://pjpjsocute.github.io/en/2023/05/12/LeetCode/LeetCode-862/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/en/images/avatar.gif">
-      <meta itemprop="name" content="Ray zhou">
-      <meta itemprop="description" content="My bolg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ray‘s Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/en/2023/05/12/LeetCode/LeetCode-862/" class="post-title-link" itemprop="url">LeetCode-862</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2023-05-12 16:14:10 / Modified: 22:35:11" itemprop="dateCreated datePublished" datetime="2023-05-12T16:14:10+08:00">2023-05-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/en/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine: </span>
-    
-    <a title="valine" href="/en/2023/05/12/LeetCode/LeetCode-862/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/en/2023/05/12/LeetCode/LeetCode-862/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Q"><a href="#Q" class="headerlink" title="Q:"></a>Q:</h3><p>Given an integer array <code>nums</code> and an integer <code>k</code>, return <em>the length of the shortest non-empty <strong>subarray</strong> of</em> <code>nums</code> <em>with a sum of at least</em> <code>k</code>. If there is no such <strong>subarray</strong>, return <code>-1</code>.</p>
-<p>A <strong>subarray</strong> is a <strong>contiguous</strong> part of an array.</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/en/2023/05/12/LeetCode/LeetCode-862/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://pjpjsocute.github.io/en/2023/05/12/LeetCode/LeetCode-406/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/en/images/avatar.gif">
-      <meta itemprop="name" content="Ray zhou">
-      <meta itemprop="description" content="My bolg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ray‘s Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/en/2023/05/12/LeetCode/LeetCode-406/" class="post-title-link" itemprop="url">LeetCode-406</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2023-05-12 16:13:50 / Modified: 22:32:57" itemprop="dateCreated datePublished" datetime="2023-05-12T16:13:50+08:00">2023-05-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/en/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine: </span>
-    
-    <a title="valine" href="/en/2023/05/12/LeetCode/LeetCode-406/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/en/2023/05/12/LeetCode/LeetCode-406/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Q"><a href="#Q" class="headerlink" title="Q:"></a>Q:</h3><p>You are given an array of people, <code>people</code>, which are the attributes of some people in a queue (not necessarily in order). Each <code>people[i] = [hi, ki]</code> represents the <code>ith</code> person of height <code>hi</code> with <strong>exactly</strong> <code>ki</code> other people in front who have a height greater than or equal to <code>hi</code>.</p>
-<p>Reconstruct and return <em>the queue that is represented by the input array</em> <code>people</code>. The returned queue should be formatted as an array <code>queue</code>, where <code>queue[j] = [hj, kj]</code> is the attributes of the <code>jth</code> person in the queue (<code>queue[0]</code> is the person at the front of the queue).</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/en/2023/05/12/LeetCode/LeetCode-406/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://pjpjsocute.github.io/en/2023/05/12/algorithm/KMP-algorithm/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/en/images/avatar.gif">
-      <meta itemprop="name" content="Ray zhou">
-      <meta itemprop="description" content="My bolg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ray‘s Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/en/2023/05/12/algorithm/KMP-algorithm/" class="post-title-link" itemprop="url">KMP algorithm</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2023-05-12 15:44:17" itemprop="dateCreated datePublished" datetime="2023-05-12T15:44:17+08:00">2023-05-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2023-05-13 00:53:28" itemprop="dateModified" datetime="2023-05-13T00:53:28+08:00">2023-05-13</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/en/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine: </span>
-    
-    <a title="valine" href="/en/2023/05/12/algorithm/KMP-algorithm/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/en/2023/05/12/algorithm/KMP-algorithm/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="KMP"><a href="#KMP" class="headerlink" title="KMP:"></a>KMP:</h3><p>​    The KMP (Knuth-Morris-Pratt) algorithm is an algorithm for string search that finds the occurrence of a word W within a text string S.</p>
-<p>The basic idea is that when a substring does not match the target string, it is known enough information to be able to determine that the next search step will not result in a missed check of the target string. In this way, the algorithm does not perform an invalid check.</p>
-<p>The following are the steps of the KMP algorithm:</p>
-<ol>
-<li>Construct a “partial match table” (also called a “failure function”). This is an array, and for a given lookup word, each element of the table contains the position where the lookup word should jump when the match fails. </li>
-<li>Use this table to perform string searches. When a match failure occurs in a text string, you can skip directly to the previous part that is known not to match.</li>
-</ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/en/2023/05/12/algorithm/KMP-algorithm/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://pjpjsocute.github.io/en/2023/05/12/algorithm/chatGPT-with-confluence/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/en/images/avatar.gif">
-      <meta itemprop="name" content="Ray zhou">
-      <meta itemprop="description" content="My bolg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ray‘s Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/en/2023/05/12/algorithm/chatGPT-with-confluence/" class="post-title-link" itemprop="url">chatGPT with confluence</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2023-05-12 15:44:05 / Modified: 22:18:17" itemprop="dateCreated datePublished" datetime="2023-05-12T15:44:05+08:00">2023-05-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/en/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine: </span>
-    
-    <a title="valine" href="/en/2023/05/12/algorithm/chatGPT-with-confluence/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/en/2023/05/12/algorithm/chatGPT-with-confluence/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Target"><a href="#Target" class="headerlink" title="Target:"></a>Target:</h3><p>Since there are too many files in Confluence at work, which are also cluttered and difficult to read, I hope chatGPT-based can help me quickly get the knowledge I want from the files</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/en/2023/05/12/algorithm/chatGPT-with-confluence/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://pjpjsocute.github.io/en/2023/05/12/LeetCode/LeetCode-386/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/en/images/avatar.gif">
-      <meta itemprop="name" content="Ray zhou">
-      <meta itemprop="description" content="My bolg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ray‘s Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/en/2023/05/12/LeetCode/LeetCode-386/" class="post-title-link" itemprop="url">LeetCode-386</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2023-05-12 15:31:09 / Modified: 22:31:17" itemprop="dateCreated datePublished" datetime="2023-05-12T15:31:09+08:00">2023-05-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/en/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine: </span>
-    
-    <a title="valine" href="/en/2023/05/12/LeetCode/LeetCode-386/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/en/2023/05/12/LeetCode/LeetCode-386/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="Q："><a href="#Q：" class="headerlink" title="Q："></a>Q：</h3><p>Given an integer <code>n</code>, return all the numbers in the range <code>[1, n]</code> sorted in lexicographical order.</p>
-<p>You must write an algorithm that runs in <code>O(n)</code> time and uses <code>O(1)</code> extra space. </p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/en/2023/05/12/LeetCode/LeetCode-386/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://pjpjsocute.github.io/en/2023/05/12/LeetCode/LeetCode-934/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/en/images/avatar.gif">
-      <meta itemprop="name" content="Ray zhou">
-      <meta itemprop="description" content="My bolg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ray‘s Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/en/2023/05/12/LeetCode/LeetCode-934/" class="post-title-link" itemprop="url">LeetCode-934</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2023-05-12 15:22:55 / Modified: 22:29:07" itemprop="dateCreated datePublished" datetime="2023-05-12T15:22:55+08:00">2023-05-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/en/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine: </span>
-    
-    <a title="valine" href="/en/2023/05/12/LeetCode/LeetCode-934/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/en/2023/05/12/LeetCode/LeetCode-934/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="LeetCode-934"><a href="#LeetCode-934" class="headerlink" title="LeetCode-934"></a>LeetCode-934</h2><h3 id="Question"><a href="#Question" class="headerlink" title="Question:"></a>Question:</h3><p>You are given an <code>n x n</code> binary matrix <code>grid</code> where <code>1</code> represents land and <code>0</code> represents water.</p>
-<p>An <strong>island</strong> is a 4-directionally connected group of <code>1</code>‘s not connected to any other <code>1</code>‘s. There are <strong>exactly two islands</strong> in <code>grid</code>.</p>
-<p>You may change <code>0</code>‘s to <code>1</code>‘s to connect the two islands to form <strong>one island</strong>.</p>
-<p>Return <em>the smallest number of</em> <code>0</code><em>‘s you must flip to connect the two islands</em>.</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/en/2023/05/12/LeetCode/LeetCode-934/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://pjpjsocute.github.io/en/2023/05/12/%E5%9F%BA%E4%BA%8Espringboot%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84BDD%E5%AE%9E%E8%B7%B5/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/en/images/avatar.gif">
-      <meta itemprop="name" content="Ray zhou">
-      <meta itemprop="description" content="My bolg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Ray‘s Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/en/2023/05/12/%E5%9F%BA%E4%BA%8Espringboot%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84BDD%E5%AE%9E%E8%B7%B5/" class="post-title-link" itemprop="url">springboot+cucumber practice</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2023-05-12 15:09:40 / Modified: 21:17:17" itemprop="dateCreated datePublished" datetime="2023-05-12T15:09:40+08:00">2023-05-12</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/en/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
-                </span>
-            </span>
-
-          
-  
-  <span class="post-meta-item">
-    
-      <span class="post-meta-item-icon">
-        <i class="far fa-comment"></i>
-      </span>
-      <span class="post-meta-item-text">Valine: </span>
-    
-    <a title="valine" href="/en/2023/05/12/%E5%9F%BA%E4%BA%8Espringboot%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84BDD%E5%AE%9E%E8%B7%B5/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/en/2023/05/12/%E5%9F%BA%E4%BA%8Espringboot%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84BDD%E5%AE%9E%E8%B7%B5/" itemprop="commentCount"></span>
-    </a>
-  </span>
-  
-  
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="springboot-cucumber实践"><a href="#springboot-cucumber实践" class="headerlink" title="springboot+cucumber实践"></a>springboot+cucumber实践</h1><h2 id="why-BDD"><a href="#why-BDD" class="headerlink" title="why BDD"></a>why BDD</h2><ul>
-<li><strong>Achieve business objectives.”</strong></li>
-<li><strong>Focus on user needs”</strong></li>
-<li><strong>Good readability</strong></li>
-</ul>
-<p>Actually, there are other reasons for me as well:</p>
-<ol>
-<li>Due to objective reasons, sometimes I only receive the PRD (Product Requirements Document) after the project development is completed. Therefore, in the early stages of development, it is easier to identify issues by establishing clear business processes through certain means rather than diving directly into development. Compared to traditional documentation (DD documents), BDD (Behavior-Driven Development) features may be easier for non-developers to understand.</li>
-<li>Documentation tends to lag behind, but it helps me or other colleagues who take over the project in the future to quickly review or understand the requirements of a particular business.</li>
-</ol>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/en/2023/05/12/%E5%9F%BA%E4%BA%8Espringboot%E2%80%94%E2%80%94%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84BDD%E5%AE%9E%E8%B7%B5/#more" rel="contents">
-                Read more &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/en/page/2/">2</a><a class="extend next" rel="next" href="/en/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
-  </nav>
 
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -1261,6 +438,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84%E4%B8%8E%E5%8A%9B%E6%89%A3%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">1.</span> <span class="nav-text">树状数组与力扣中的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E9%9C%80%E8%A6%81%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84"><span class="nav-number">1.1.</span> <span class="nav-text">为什么会需要树状数组</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%9D%E8%80%83%E4%BB%A5%E4%B8%8B%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.1.</span> <span class="nav-text">思考以下问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%87%E7%BA%A7%E8%BF%99%E4%B8%AA%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.2.</span> <span class="nav-text">升级这个问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86%E2%80%94%E2%80%94%E4%BA%8C%E8%BF%9B%E5%88%B6%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">1.1.3.</span> <span class="nav-text">前置知识——二进制的应用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E7%8A%B6%E6%95%B0%E7%BB%84%EF%BC%88Binary-Indexed-Tree%EF%BC%8CBIT%EF%BC%89"><span class="nav-number">1.1.4.</span> <span class="nav-text">数状数组（Binary Indexed Tree，BIT）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">1.1.4.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">1.1.4.2.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%B1%82%E5%92%8C"><span class="nav-number">1.1.4.2.1.</span> <span class="nav-text">求和</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E6%9B%B4%E6%96%B0"><span class="nav-number">1.1.4.2.2.</span> <span class="nav-text">更新</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8A%9B%E6%89%A3%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-number">1.1.5.</span> <span class="nav-text">力扣中的应用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#LeetCode-493"><span class="nav-number">1.1.6.</span> <span class="nav-text">LeetCode-493</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Qa"><span class="nav-number">1.1.6.1.</span> <span class="nav-text">Qa:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Input"><span class="nav-number">1.1.6.2.</span> <span class="nav-text">Input:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Solution"><span class="nav-number">1.1.6.3.</span> <span class="nav-text">Solution</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Code"><span class="nav-number">1.1.6.4.</span> <span class="nav-text">Code</span></a></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
