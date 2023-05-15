@@ -197,7 +197,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2023-05-15 11:30:14 / Modified: 17:09:47" itemprop="dateCreated datePublished" datetime="2023-05-15T11:30:14+08:00">2023-05-15</time>
+              <time title="Created: 2023-05-15 11:30:14 / Modified: 17:20:14" itemprop="dateCreated datePublished" datetime="2023-05-15T11:30:14+08:00">2023-05-15</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -241,14 +241,14 @@
 <p><strong>QA</strong>:</p>
 <p>Suppose there exists a sequence of integers input, e.g. <code>intput = [1,2,7,4,3]</code>, requiring the sum of the first K numbers.</p>
 <p><strong>Sulotion</strong>:</p>
-<p>Generally we will find a prefix and array <code>preSumArray</code>, where <code>preSumArray[i]` represents the sum of the first `i` numbers, so that we find the sum of the first N numbers only need to return</code>preSumArray[N]`, the time complexity is O(1), if you need to query K times, the complexity is O(K).</p>
+<p>Generally we will find a prefix and array <code>preSumArray</code>, where <code>preSumArray[i]</code> represents the sum of the first <code>i</code> numbers, so that we find the sum of the first N numbers only need to return <code>preSumArray[N]</code>, the time complexity is O(1), if you need to query K times, the complexity is O(K).</p>
 <ul>
-<li><h4 id="升级这个问题"><a href="#升级这个问题" class="headerlink" title="升级这个问题"></a>升级这个问题</h4></li>
+<li><h4 id="Update-this-question"><a href="#Update-this-question" class="headerlink" title="Update this question"></a>Update this question</h4></li>
 </ul>
 <p><strong>QA</strong>:</p>
 <p>Suppose there exists a sequence of integers input, e.g. <code>intput = [1,2,7,4,3]</code>, now when we get the sum of the first N numbers, we might first increase/decrease the number at position <code>i</code> by <code>value</code>.</p>
 <p><strong>Sulotion</strong>:</p>
-<p>Generally we will find a prefix sum array <code>preSumArray</code>, where <code></code>preSumArray[i]<code>represents the sum of the first</code>i<code>numbers, as shown in the previous problem, we can still get the prefix sum in O(1) time. But if we need to insert a number</code>x<code>at position</code>i<code>, we need to update all</code>preSumArray<code>after</code>i<code>when we do the update, at which point the single update time is O(N) and the complexity of the K queries is O(KN). If we do not use</code>preSumArray`, then the update complexity is O(1), and the query complexity becomes O(N).</p>
+<p>Generally we will find a prefix sum array <code>preSumArray</code>, where <code>preSumArray[i]</code> represents the sum of the first <code>i</code> numbers, as shown in the previous problem, we can still get the prefix sum in O(1) time. But if we need to insert a number <code>x</code> at position <code>i</code>, we need to update all <code>preSumArray</code> after <code>i</code> when we do the update, at which point the single update time is O(N) and the complexity of the K queries is O(KN). If we do not use <code>preSumArray</code>, then the update complexity is O(1), and the query complexity becomes O(N).</p>
 <p><strong>This is where Binary Indexed Tree can help us solve this problem quickly.</strong></p></li></ul>
           <!--noindex-->
             <div class="post-button">
