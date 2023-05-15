@@ -30,12 +30,12 @@
 <meta property="og:image" content="http://pjpjsocute.github.io/en/2023/05/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/WX20230515-152510@2x.png">
 <meta property="og:image" content="http://pjpjsocute.github.io/en/2023/05/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/WX20230515-152510@2x.png">
 <meta property="article:published_time" content="2023-05-15T03:30:14.000Z">
-<meta property="article:modified_time" content="2023-05-15T09:20:14.631Z">
+<meta property="article:modified_time" content="2023-05-15T09:27:18.820Z">
 <meta property="article:author" content="Ray zhou">
 <meta property="article:tag" content="java">
+<meta property="article:tag" content="LeetCode">
 <meta property="article:tag" content="technology">
 <meta property="article:tag" content="Binary Indexed Tree">
-<meta property="article:tag" content="LeetCode">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://pjpjsocute.github.io/en/2023/05/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/WX20230515-152510@2x.png">
 
@@ -206,7 +206,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2023-05-15 11:30:14 / Modified: 17:20:14" itemprop="dateCreated datePublished" datetime="2023-05-15T11:30:14+08:00">2023-05-15</time>
+              <time title="Created: 2023-05-15 11:30:14 / Modified: 17:27:18" itemprop="dateCreated datePublished" datetime="2023-05-15T11:30:14+08:00">2023-05-15</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -286,7 +286,9 @@
 <p><code>getSum(7) = A(1) +... +A(7) = B(4)+B(6)+B(7)</code></p>
 <p><code>getSum(6) = B(4)+B(6)</code></p>
 <p>Now the question is, how do you put <code>A(1)+.... +A(i)</code> to the stump array corresponding to those items:</p>
-<p><strong>First: B(i) is defined as the sum of the first lowbit(i) starting from A(i), so we can get</strong><br>$$<br>B(i) = A(i-lowbit(i)+1)+… +A(i)\<br>$$<br>Then,we can obtain:<br>$$<br>getSum(i) = A(1)+…+A(x)\<br>=A(1)+…+A(i-lowbit(i))+A(i-lowbit(i)+1)+…+A(i)\<br>=getSum(i-lowbit(i))+B(i)<br>$$<br>We can then easily write the getSum function as follows:</p>
+<p><strong>First: B(i) is defined as the sum of the first lowbit(i) starting from A(i), so we can get</strong><br>$$<br>B(i) = A(i-lowbit(i)+1)+… +A(i)\<br>$$<br>Then,we can obtain:</p>
+<p>$getSum(i) = A(1)+…+A(x)\<br>=A(1)+…+A(i-lowbit(i))+A(i-lowbit(i)+1)+…+A(i)\<br>=getSum(i-lowbit(i))+B(i)$</p>
+<p>We can then easily write the getSum function as follows:</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getSum</span><span class="params">(<span class="type">int</span> x)</span>&#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">res</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> x; i &gt; <span class="number">0</span>; i -= lowbit(i)) &#123;</span><br><span class="line">      res += bit[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 <p>Use the recursive form.</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getSum</span><span class="params">(<span class="type">int</span> x)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(x&lt;=<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> bit[x]+(<span class="type">long</span>)getSum(x-lowbit(x));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -355,9 +357,9 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/en/tags/java/" rel="tag"># java</a>
+              <a href="/en/tags/LeetCode/" rel="tag"># LeetCode</a>
               <a href="/en/tags/technology/" rel="tag"># technology</a>
               <a href="/en/tags/Binary-Indexed-Tree/" rel="tag"># Binary Indexed Tree</a>
-              <a href="/en/tags/LeetCode/" rel="tag"># LeetCode</a>
           </div>
 
         
