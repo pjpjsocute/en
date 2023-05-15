@@ -186,7 +186,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/en/2023/05/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/" class="post-title-link" itemprop="url">树状数组</a>
+            <a href="/en/2023/05/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/" class="post-title-link" itemprop="url">Binary Indexed Tree with applications in LeetCode</a>
         </h2>
 
         <div class="post-meta">
@@ -197,7 +197,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2023-05-15 11:30:14 / Modified: 16:53:33" itemprop="dateCreated datePublished" datetime="2023-05-15T11:30:14+08:00">2023-05-15</time>
+              <time title="Created: 2023-05-15 11:30:14 / Modified: 17:09:47" itemprop="dateCreated datePublished" datetime="2023-05-15T11:30:14+08:00">2023-05-15</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -234,118 +234,30 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="树状数组与力扣中的应用"><a href="#树状数组与力扣中的应用" class="headerlink" title="树状数组与力扣中的应用"></a>树状数组与力扣中的应用</h2><ul>
-<li><h3 id="为什么会需要树状数组"><a href="#为什么会需要树状数组" class="headerlink" title="为什么会需要树状数组"></a>为什么会需要树状数组</h3><ul>
-<li><h4 id="思考以下问题"><a href="#思考以下问题" class="headerlink" title="思考以下问题"></a>思考以下问题</h4></li>
+          <h2 id="Binary-Indexed-Tree-with-applications-in-LeetCode"><a href="#Binary-Indexed-Tree-with-applications-in-LeetCode" class="headerlink" title="Binary Indexed Tree with applications in LeetCode"></a>Binary Indexed Tree with applications in LeetCode</h2><ul>
+<li><h3 id="Why-need-Binary-Indexed-Tree"><a href="#Why-need-Binary-Indexed-Tree" class="headerlink" title="Why need Binary Indexed Tree"></a>Why need Binary Indexed Tree</h3><ul>
+<li><h4 id="Think-about-the-following-questions"><a href="#Think-about-the-following-questions" class="headerlink" title="Think about the following questions"></a>Think about the following questions</h4></li>
 </ul>
 <p><strong>QA</strong>:</p>
-<p>假设存在一个整数序列input，例如<code>intput = [1,2,7,4,3]</code>，要求前K个数的和。</p>
+<p>Suppose there exists a sequence of integers input, e.g. <code>intput = [1,2,7,4,3]</code>, requiring the sum of the first K numbers.</p>
 <p><strong>Sulotion</strong>:</p>
-<p>一般我们会求一个前缀和数组<code>preSumArray</code>,其中<code>preSumArray[i]</code>代表前<code>i</code>个数的和，这样我们求前N个数的和只需要返回<code>preSumArray[N]</code>， 时间复杂度为O(1),如果需要查询K次，则复杂度为O(K).</p>
+<p>Generally we will find a prefix and array <code>preSumArray</code>, where <code>preSumArray[i]` represents the sum of the first `i` numbers, so that we find the sum of the first N numbers only need to return</code>preSumArray[N]`, the time complexity is O(1), if you need to query K times, the complexity is O(K).</p>
 <ul>
 <li><h4 id="升级这个问题"><a href="#升级这个问题" class="headerlink" title="升级这个问题"></a>升级这个问题</h4></li>
 </ul>
 <p><strong>QA</strong>:</p>
-<p>假设存在一个整数序列input，例如<code>intput = [1,2,7,4,3]</code>，现在在我们获取前N个数的和时，可能会先将<code>i</code>位置的数增加/减少<code>value</code>。</p>
+<p>Suppose there exists a sequence of integers input, e.g. <code>intput = [1,2,7,4,3]</code>, now when we get the sum of the first N numbers, we might first increase/decrease the number at position <code>i</code> by <code>value</code>.</p>
 <p><strong>Sulotion</strong>:</p>
-<p>一般我们会求一个前缀和数组<code>preSumArray</code>,其中<code>preSumArray[i]</code>代表前<code>i</code>个数的和，如上一个问题所示，我们依旧可以在O(1)的时间得到前缀和。但是如果我们需要在第<code>i</code>位置插入一个数<code>x</code>，在进行更新时需要更新<code>i</code>之后的所有<code>preSumArray</code>，此时单次的更新时间为O(N)，K次查询的复杂度为O(KN)。如果我们不使用<code>preSumArray</code>，那么更新复杂度为O(1),查询复杂度会变为O(N)。</p>
-<p><strong>这时树桩数组可以帮助我们快速解决这个问题</strong></p>
-<ul>
-<li><h4 id="前置知识——二进制的应用"><a href="#前置知识——二进制的应用" class="headerlink" title="前置知识——二进制的应用"></a>前置知识——二进制的应用</h4></li>
-</ul>
-<p>二进制有很多有趣的应用，可能后续可以进行一些总结，但是这里介绍一个用法<code>lowbit(x) = x&amp;(-x)</code></p>
-<p>这个式子的目的是<strong>可以求出能够整除X的最大的2次幂</strong>，<strong>也就是X最右边的1</strong>，这个目的很重要。</p>
-<p>举个例子: <code>5&amp;-5 = 1</code>；<code>10&amp;-10 = 2</code>；<code>12&amp;-12 = 4</code></p>
-<p><strong>原理：</strong></p>
-<p>一般整数在计算机中使用补码存储，负数相当于每一位取反，然后低位+1。</p>
-<p>如 <code>10 = 1010</code>, <code>-10 = 0110</code>,因此<code>lowbit(10) = 2</code></p>
-<ul>
-<li><h4 id="数状数组（Binary-Indexed-Tree，BIT）"><a href="#数状数组（Binary-Indexed-Tree，BIT）" class="headerlink" title="数状数组（Binary Indexed Tree，BIT）"></a>数状数组（Binary Indexed Tree，BIT）</h4><ul>
-<li><h5 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h5></li>
-</ul>
-<p>本质上它仍是一个数组，并且与<code>preSumArray</code>相似，存的依旧是和数组，但是他存放的是 <strong>i位之前(包括i)，lowbit(i)个整数的和</strong>。可以用下图以及公式表示</p>
-<p><img src="/en/2023/05/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/WX20230515-152510@2x.png" alt="WX20230515-152510@2x"></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">B(1) = A(1);</span><br><span class="line">B(2) = A(1)+A(2);</span><br><span class="line">B(3) = A(3);</span><br><span class="line">B(4) = A(1)+A(2)+A(3)+A(4);</span><br><span class="line">B(5) = A(5);</span><br><span class="line">B(6) = A(5)+A(6);</span><br><span class="line">B(7) = A(7);</span><br><span class="line">B(8) = A(1)+A(2)+A(3)+A(4)+A(5)+A(6)+A(7)+A(8);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p><strong>tip</strong>:树状数组的下标必须从1开始</p>
-</li>
-<li><ul>
-<li><h5 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h5><p>现在基于树状数组，我们需要解决之前的2个问题——求和与更新。</p>
-<ul>
-<li><h6 id="求和"><a href="#求和" class="headerlink" title="求和"></a>求和</h6><p>假设我们有一个函数getSum(i),可以求1-i的所有数的和。接下来就是如何去实现它。</p>
-<p>举个例子:</p>
-<p><code>getSum(7) = A(1)+...+A(7) = B(4)+B(6)+B(7)</code></p>
-<p><code>getSum(6) =  B(4)+B(6)</code></p>
-<p>现在的问题就是，如何将<code>A(1)+....+A(i)</code>映射到树桩数组对应那些项:<br>$$<br>首先: B(i)的定义为从A(i)开始，前lowbit(i)的和，所以我们可以得到\<br>B(i) = A(i-lowbit(i)+1)+…+A(i)\<br>因此，我们可以得到:\</p>
-<p>\begin{flalign<em>}<br>getSum(i) &amp;= A(1)+…+A(x)\<br>&amp;=A(1)+…+A(i-lowbit(i))+A(i-lowbit(i)+1)+…+A(i)\<br>&amp;=getSum(i-lowbit(i))+B(i)<br>\end{flalign</em>}<br>$$<br>这样我们可以很容易的写出getSum函数：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getSum</span><span class="params">(<span class="type">int</span> x)</span>&#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">res</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> x; i &gt; <span class="number">0</span>; i -= lowbit(i)) &#123;</span><br><span class="line">      res += bit[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>使用递归的形式:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getSum</span><span class="params">(<span class="type">int</span> x)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(x&lt;=<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> bit[x]+(<span class="type">long</span>)getSum(x-lowbit(x));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>该过程的复杂度为O(LogN)</strong>(省略过程)</p>
-<p>更进一步，如果我们要求<code>sum(i,j)</code>，那么我们只需要<code>getSum(j)-getSum(i-1)</code>即可。</p>
-</li>
-<li><h6 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h6><p>假设我们有一个函数<code>update(i,value)</code>，实现在i位置的数加上 <code>value</code>。现在思考如何实现：</p>
-<p>还是举个例子：</p>
-<p>如果我们要<code>update(6,7)</code>，也就是在6的位置+7，那我们根据上面的图，我们需要更新 <code>B(6)和B(8)</code>,因为 <code>B(6)</code>和<code>B(8)</code>的求和项均包含了A(6)。</p>
-<p><code>B(6) = A(5)+A(6);</code><br><code>B(8) = A(1)+A(2)+A(3)+A(4)+A(5)+A(6)+A(7)+A(8);</code></p>
-<p>所以现在的问题转换为如何知道BIT中所有包含A(i)的项。</p>
-<p><img src="/en/2023/05/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/WX20230515-152510@2x.png" alt="WX20230515-152510@2x"></p>
-<p>比如我们我们要找到所有覆盖A(5)的BIT。</p>
-<p>首先：B(5)一定覆盖了。</p>
-<p>其次，我们需要找到距离B(5)最近覆盖它的BIT，即B(6)</p>
-<p>接下来只需要找到覆盖了B(6)距离他最近的BIT，即B(8)</p>
-<p>以此类推。</p>
-<p>也就是说，我们只需要找到对于当前BIT(i)，能覆盖它的最近的BIT(j)，并更新他的值。</p>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<pre><code>我们可以发现：
-
-如果需要BIT(j)覆盖BIT(i)，那么`lowbit(j)&gt;lowbit(i)`，否则肯定无法覆盖，那么可以转换为 `lowbit(i+a)&gt;lowbit(i)`，求最小的a。
-
-
-
-因为lowbit(i)是**整除i的最大的2次幂**，**也就是i最右边的1**。
-
-所以如果 `lowbit(a)&lt;lowbit(i)`，那么`lowbit(i+a)&lt;lowbit(i)`。
-
-举个例子，如果`lowbit(j)`是0100，`lowbit(i)`是0010，如果`lowbit(a+i)一定小于lowbit(i)`(因为最右边的1一定会被保留所以a+i只会取a和i中右1更小的那个)。
-
-
-
-当`lowbit(a)=lowbit(i)`，此时会最右边的1会产生进位，那么最右边的1**一定会向右移**，所以`lowbit(a+i)&gt;lowbit(i)`，一定成立，因此我们可以得到`lowbit(a)=lowbit(i)`
-
-这样我们可以开始写update函数：
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">updata</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> value)</span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> x; i &lt; bit.length; i += lowbit(i))&#123;</span><br><span class="line">      <span class="comment">//update</span></span><br><span class="line">      bit[i] += value;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</code></pre><ul>
-<li><h4 id="力扣中的应用"><a href="#力扣中的应用" class="headerlink" title="力扣中的应用"></a>力扣中的应用</h4><ul>
-<li><h4 id="LeetCode-493"><a href="#LeetCode-493" class="headerlink" title="LeetCode-493"></a>LeetCode-493</h4><ul>
-<li><h5 id="Qa"><a href="#Qa" class="headerlink" title="Qa:"></a>Qa:</h5><p>给定一个数组 <code>nums</code> ，如果 <code>i &lt; j</code> 且 <code>nums[i] &gt; 2*nums[j]</code> 我们就将 <code>(i, j)</code> 称作一个<strong><em>重要翻转对\</em></strong>。</p>
-<p>你需要返回给定数组中的重要翻转对的数量。</p>
-</li>
-<li><h5 id="Input"><a href="#Input" class="headerlink" title="Input:"></a>Input:</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">输入: [1,3,2,3,1]</span><br><span class="line">输出: 2</span><br></pre></td></tr></table></figure>
-</li>
-<li><h5 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h5><p>题干的问题可以转换为求 <strong>在j元素左边比他2倍大的元素有几个</strong>，并求和。</p>
-<ol>
-<li>将数组进行排序，并且离散化映射为1-n的有序序列(多数题都需要这一步，因为树状数组的索引必须从1开始，所以需要对入参进行映射)。</li>
-<li>统计每个数的出现次数。</li>
-<li>求映射元素次数的前缀和, 得到映射后的元素的个数, 也就得到了之前元素的个数</li>
-</ol>
-</li>
-<li><h5 id="Code"><a href="#Code" class="headerlink" title="Code"></a>Code</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">class</span> <span class="title class_">TrieArr</span>&#123;</span><br><span class="line">        <span class="type">long</span> [] arr;</span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">TrieArr</span><span class="params">(<span class="type">int</span> n)</span>&#123;</span><br><span class="line">            arr = <span class="keyword">new</span> <span class="title class_">long</span> [n];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">lowbit</span><span class="params">(<span class="type">int</span> x)</span>&#123;</span><br><span class="line">            <span class="keyword">return</span> x&amp;(-x);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getSum</span><span class="params">(<span class="type">int</span> x)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(x&lt;=<span class="number">0</span>)&#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> arr[x]+()getSum(x-lowbit(x));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">updata</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> c)</span>&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> x; i &lt; arr.length; i += lowbit(i)) arr[i] += c;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">reversePairs</span><span class="params">(<span class="type">int</span>[] nums)</span> &#123;</span><br><span class="line">      	<span class="comment">//nums[i] 和树桩数组的index映射map</span></span><br><span class="line">        <span class="comment">//nums[i] and BIT&#x27;s index mapping map</span></span><br><span class="line">        Map&lt;Long,Integer&gt; map = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">       <span class="comment">//对nums元素排序存储，因为要求的是大2倍的数，所以需要把nums[i]*2也加入计算</span></span><br><span class="line">      <span class="comment">//Sort and store the elements of nums, because the number required is 2 times larger, so you need to add nums[i]*2 to the calculation as well</span></span><br><span class="line">        TreeSet&lt;Long&gt; set = <span class="keyword">new</span> <span class="title class_">TreeSet</span>&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i:nums)&#123;</span><br><span class="line">            set.add((<span class="type">long</span>)i);</span><br><span class="line">            set.add((<span class="type">long</span>)i*<span class="number">2</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//离散化,并映射</span></span><br><span class="line">      	<span class="comment">//Discretization, and mapping</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(!set.isEmpty())&#123;</span><br><span class="line">            map.put(set.pollFirst(),index++);</span><br><span class="line">        &#125;</span><br><span class="line">      	<span class="comment">//init bit tree</span></span><br><span class="line">        <span class="type">TrieArr</span> <span class="variable">bit</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TrieArr</span>(map.size()+<span class="number">1</span>);</span><br><span class="line">      	<span class="comment">//result</span></span><br><span class="line">        <span class="type">int</span> <span class="variable">ans</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; nums.length; i++)&#123;</span><br><span class="line">            <span class="comment">//因为是求大于nums[i]*2的出现总次数，那么将所有数字的出现次数-小于等于nums[i]*2出现的次数即可。</span></span><br><span class="line">           <span class="comment">//Since we are looking for the total number of occurrences greater than nums[i]*2, it is sufficient to take the number of occurrences of all numbers - the number of occurrences less than or equal to nums[i]*2.</span></span><br><span class="line">          	<span class="comment">//get the nums[i]*2</span></span><br><span class="line">            <span class="type">long</span> <span class="variable">target</span> <span class="operator">=</span> (<span class="type">long</span>)nums[i] * <span class="number">2</span>;</span><br><span class="line">          	<span class="comment">//get bit index</span></span><br><span class="line">            <span class="type">int</span> <span class="variable">l</span> <span class="operator">=</span> map.get(target);</span><br><span class="line">          	<span class="comment">//total sum - getsum(target)</span></span><br><span class="line">            ans += bit.getSum(map.size()) - bit.getSum(l);</span><br><span class="line">          	<span class="comment">//get nums[i]’s index and update nums[i] occurrences</span></span><br><span class="line">            bit.updata(map.get((<span class="type">long</span>)nums[i]), <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<pre><code>- #### 类似的问题还有LeetCode-307 .etc
-</code></pre>
+<p>Generally we will find a prefix sum array <code>preSumArray</code>, where <code></code>preSumArray[i]<code>represents the sum of the first</code>i<code>numbers, as shown in the previous problem, we can still get the prefix sum in O(1) time. But if we need to insert a number</code>x<code>at position</code>i<code>, we need to update all</code>preSumArray<code>after</code>i<code>when we do the update, at which point the single update time is O(N) and the complexity of the K queries is O(KN). If we do not use</code>preSumArray`, then the update complexity is O(1), and the query complexity becomes O(N).</p>
+<p><strong>This is where Binary Indexed Tree can help us solve this problem quickly.</strong></p></li></ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/en/2023/05/15/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/%E6%A0%91%E7%8A%B6%E6%95%B0%E7%BB%84/#more" rel="contents">
+                Read more &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -1287,7 +1199,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/en/tags/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
