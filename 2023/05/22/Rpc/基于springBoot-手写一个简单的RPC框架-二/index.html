@@ -27,16 +27,16 @@
 <meta property="og:site_name" content="Ray‘s Blog">
 <meta property="og:description" content="based on springBoot, hand-written a simple RPC framework(2) Continuing from the previous chapter, after implementing the service registration you need to implement the service invocation.">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://pjpjsocute.github.io/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%BA%8C/lei.zhou/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20230522163034434.png">
-<meta property="og:image" content="http://pjpjsocute.github.io/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%BA%8C/lei.zhou/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20230522174913202.png">
+<meta property="og:image" content="http://pjpjsocute.github.io/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20230522163034434.png">
+<meta property="og:image" content="http://pjpjsocute.github.io/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20230522174913202.png">
 <meta property="article:published_time" content="2023-05-22T07:49:52.000Z">
-<meta property="article:modified_time" content="2023-05-22T10:29:52.639Z">
+<meta property="article:modified_time" content="2023-05-22T10:31:33.660Z">
 <meta property="article:author" content="Ray zhou">
 <meta property="article:tag" content="project">
 <meta property="article:tag" content="java">
 <meta property="article:tag" content="Rpc">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://pjpjsocute.github.io/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%BA%8C/lei.zhou/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20230522163034434.png">
+<meta name="twitter:image" content="http://pjpjsocute.github.io/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20230522163034434.png">
 
 <link rel="canonical" href="http://pjpjsocute.github.io/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%BA%8C/">
 
@@ -205,7 +205,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2023-05-22 15:49:52 / Modified: 18:29:52" itemprop="dateCreated datePublished" datetime="2023-05-22T15:49:52+08:00">2023-05-22</time>
+              <time title="Created: 2023-05-22 15:49:52 / Modified: 18:31:33" itemprop="dateCreated datePublished" datetime="2023-05-22T15:49:52+08:00">2023-05-22</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -242,7 +242,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="based-on-springBoot-hand-written-a-simple-RPC-framework-2"><a href="#based-on-springBoot-hand-written-a-simple-RPC-framework-2" class="headerlink" title="based on springBoot, hand-written a simple RPC framework(2)"></a>based on springBoot, hand-written a simple RPC framework(2)</h1><p><img src="/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%BA%8C/lei.zhou/Rpc/基于springBoot-手写一个简单的RPC框架-二/image-20230522163034434.png" alt="image-20230522163034434"></p>
+        <h1 id="based-on-springBoot-hand-written-a-simple-RPC-framework-2"><a href="#based-on-springBoot-hand-written-a-simple-RPC-framework-2" class="headerlink" title="based on springBoot, hand-written a simple RPC framework(2)"></a>based on springBoot, hand-written a simple RPC framework(2)</h1><p><img src="/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20230522163034434.png" alt="image-20230522163034434"></p>
 <p>Continuing from the previous chapter, after implementing the service registration you need to implement the service invocation.</p>
 <span id="more"></span>
 <h3 id="Service-execution"><a href="#Service-execution" class="headerlink" title="Service execution"></a>Service execution</h3><p>An RPC service call should be divided into the following steps:</p>
@@ -264,7 +264,7 @@
 <h4 id="Coding-and-protocols"><a href="#Coding-and-protocols" class="headerlink" title="Coding and protocols"></a>Coding and protocols</h4><p>Once the service has been implemented, we need to supplement him with encoding and processing classes in turn.</p>
 <p>Before implementing the encoded service, the underlying encoding protocol should first be determined.</p>
 <h5 id="protocols"><a href="#protocols" class="headerlink" title="protocols"></a>protocols</h5><p>For this project, we have chosen a relatively simple protocol design by referring to some existing protocol designs, as shown in the following diagram.</p>
-<p><img src="/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%BA%8C/lei.zhou/Rpc/基于springBoot-手写一个简单的RPC框架-二/image-20230522174913202.png" alt="image-20230522174913202"></p>
+<p><img src="/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%BA%8C/image-20230522174913202.png" alt="image-20230522174913202"></p>
 <p>The protocol consists of a 16byte header and body.</p>
 <p>Where 0-4 is the magic code, used for checksum</p>
 <p>4-5 are custom versions of the protocol</p>
