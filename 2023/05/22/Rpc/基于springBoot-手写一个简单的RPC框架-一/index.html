@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/en/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/en/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/en/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/en/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/en/css/main.css">
+
+
+<link rel="stylesheet" href="/en/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"pjpjsocute.github.io","root":"/en/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="based on springBoot, hand-written a simple RPC framework(1)Code:pjpjsocute&#x2F;rpc-service: personal rcp attempt (github.com)Technology stack use includes:springboot,Zookeeper,netty,java spiRPC Definition">
+<meta property="og:type" content="article">
+<meta property="og:title" content="based on springBoot, hand-written a simple RPC framework(1)">
+<meta property="og:url" content="http://pjpjsocute.github.io/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%B8%80/index.html">
+<meta property="og:site_name" content="Ray‘s Blog">
+<meta property="og:description" content="based on springBoot, hand-written a simple RPC framework(1)Code:pjpjsocute&#x2F;rpc-service: personal rcp attempt (github.com)Technology stack use includes:springboot,Zookeeper,netty,java spiRPC Definition">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://pjpjsocute.github.io/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%B8%80/image-20230522161808172.png">
+<meta property="og:image" content="http://pjpjsocute.github.io/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%B8%80/lei.zhou/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%B8%80/image-20230522163034434.png">
+<meta property="article:published_time" content="2023-05-22T07:49:52.000Z">
+<meta property="article:modified_time" content="2023-05-22T10:26:31.658Z">
+<meta property="article:author" content="Ray zhou">
+<meta property="article:tag" content="project">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="Rpc">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://pjpjsocute.github.io/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%B8%80/image-20230522161808172.png">
+
+<link rel="canonical" href="http://pjpjsocute.github.io/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%B8%80/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>based on springBoot, hand-written a simple RPC framework(1) | Ray‘s Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/en/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Ray‘s Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/en/" rel="section"><i class="home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/en/tags/" rel="section"><i class="tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/en/categories/" rel="section"><i class="th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/en/archives/" rel="section"><i class="archive fa-fw"></i>Archives</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/en/about/" rel="section"><i class="user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-中文">
+
+    <a href="https://pjpjsocute.github.io/" rel="section"><i class="中文 fa-fw"></i>中文</a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/en/guestbook/" rel="section"><i class="comments fa-fw"></i>Message Board</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://pjpjsocute.github.io/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%B8%80/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/en/images/avatar.gif">
+      <meta itemprop="name" content="Ray zhou">
+      <meta itemprop="description" content="My bolg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ray‘s Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          based on springBoot, hand-written a simple RPC framework(1)
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-05-22 15:49:52 / Modified: 18:26:31" itemprop="dateCreated datePublished" datetime="2023-05-22T15:49:52+08:00">2023-05-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/en/categories/technology/" itemprop="url" rel="index"><span itemprop="name">technology</span></a>
+                </span>
+            </span>
+
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%B8%80/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%B8%80/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="based-on-springBoot-hand-written-a-simple-RPC-framework-1"><a href="#based-on-springBoot-hand-written-a-simple-RPC-framework-1" class="headerlink" title="based on springBoot, hand-written a simple RPC framework(1)"></a>based on springBoot, hand-written a simple RPC framework(1)</h1><h2 id="Code-pjpjsocute-rpc-service-personal-rcp-attempt-github-com"><a href="#Code-pjpjsocute-rpc-service-personal-rcp-attempt-github-com" class="headerlink" title="Code:pjpjsocute/rpc-service: personal rcp attempt (github.com)"></a>Code:<a target="_blank" rel="noopener" href="https://github.com/pjpjsocute/rpc-service">pjpjsocute/rpc-service: personal rcp attempt (github.com)</a></h2><h2 id="Technology-stack-use-includes-springboot-Zookeeper-netty-java-spi"><a href="#Technology-stack-use-includes-springboot-Zookeeper-netty-java-spi" class="headerlink" title="Technology stack use includes:springboot,Zookeeper,netty,java spi"></a>Technology stack use includes:springboot,Zookeeper,netty,java spi</h2><h2 id="RPC-Definition"><a href="#RPC-Definition" class="headerlink" title="RPC Definition"></a>RPC Definition</h2><p>Remote Procedure Call (RPC) is a communication mechanism that allows different services to communicate and interact with each other over the network.</p>
+<p>Through RPC, a service can make a request to another service and obtain a response, just like a local call, without the developer having to manually handle the underlying network communication details.The RPC framework encapsulates the underlying network transport and provides functionality such as the definition of remote service interfaces, serialisation and deserialisation of data.</p>
+<span id="more"></span>
+<h3 id="rpc-vs-http-discrimination"><a href="#rpc-vs-http-discrimination" class="headerlink" title="rpc vs. http discrimination:"></a><strong>rpc vs. http discrimination:</strong></h3><p>HTTP is an application layer protocol used to transmit hypertext, which communicates between a client and a server. It is based on the request-response model, where the client sends an HTTP request to the server and the server processes the request and returns the corresponding HTTP response. rpc is more akin to an architectural idea, and rpc can be implemented with HTTP and implemented with TCP.</p>
+<h2 id="RPC-process"><a href="#RPC-process" class="headerlink" title="RPC process"></a>RPC process</h2><p>A simple RPC architecture is shown in the diagram:</p>
+<p><img src="/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%B8%80/image-20230522161808172.png" alt="image-20230522161808172"></p>
+<h2 id="How-to-achieve"><a href="#How-to-achieve" class="headerlink" title="How to achieve:"></a>How to achieve:</h2><h3 id="A-simple-RPC-call-link"><a href="#A-simple-RPC-call-link" class="headerlink" title="A simple RPC call link:"></a>A simple RPC call link:</h3><p><img src="/en/2023/05/22/Rpc/%E5%9F%BA%E4%BA%8EspringBoot-%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84RPC%E6%A1%86%E6%9E%B6-%E4%B8%80/lei.zhou/Rpc/基于springBoot-手写一个简单的RPC框架-一/image-20230522163034434.png" alt="image-20230522163034434"></p>
+<h2 id="server-side-implementation-based-on-netty-and-ZK"><a href="#server-side-implementation-based-on-netty-and-ZK" class="headerlink" title="server-side implementation based on netty and ZK"></a>server-side implementation based on netty and ZK</h2><p>According to the diagram above, first we need to implement service registration.</p>
+<h3 id="Service-registration"><a href="#Service-registration" class="headerlink" title="Service registration:"></a>Service registration:</h3><p>Most current RPC frameworks support annotations for registration, and the same approach is used here.</p>
+<h4 id="Define-registration-annotations"><a href="#Define-registration-annotations" class="headerlink" title="Define registration annotations"></a>Define registration annotations</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Target(&#123;ElementType.TYPE&#125;)</span></span><br><span class="line"><span class="meta">@Inherited</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> RpcProvider &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Service group, default value is empty string</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    String <span class="title function_">project</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;default&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Service version, default value is 1.0</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    String <span class="title function_">version</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;1.0&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Service group, default value is empty string</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    String <span class="title function_">group</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;default&quot;</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Target(&#123;ElementType.FIELD, ElementType.TYPE&#125;)</span></span><br><span class="line"><span class="meta">@Inherited</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> RpcConsumer &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Service project, default value is empty string</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    String <span class="title function_">project</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;default&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Service version, default value is 1.0</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    String <span class="title function_">version</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;1.0&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Service group, default value is empty string</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    String <span class="title function_">group</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;default&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@Target(&#123;ElementType.TYPE, ElementType.METHOD&#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Import(CustomBeanScannerRegistrar.class)</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> SimpleRpcApplication &#123;</span><br><span class="line"></span><br><span class="line">    String[] basePackage();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>This annotation will define the service version, the group (to distinguish between different interfaces with the same name and the same project), and the project name for service exposure.</p>
+<p>Similarly, an annotation is needed for consumption; an annotation defining the packages to be scanned</p>
+<h4 id="Registering-services-at-startup"><a href="#Registering-services-at-startup" class="headerlink" title="Registering services at startup"></a>Registering services at startup</h4><h5 id="First-the-annotation-with-provider-needs-to-be-registered"><a href="#First-the-annotation-with-provider-needs-to-be-registered" class="headerlink" title="First, the annotation with @provider needs to be registered"></a>First, the annotation with @provider needs to be registered</h5><p>Get the package to be scanned and then register the annotated bean into spring</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CustomBeanScannerRegistrar</span> <span class="keyword">implements</span> <span class="title class_">ImportBeanDefinitionRegistrar</span>, ResourceLoaderAware &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ResourceLoader resourceLoader;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">API_SCAN_PARAM</span> <span class="operator">=</span> <span class="string">&quot;basePackage&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">SPRING_BEAN_BASE_PACKAGE</span> <span class="operator">=</span> <span class="string">&quot;org.example.ray&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">registerBeanDefinitions</span><span class="params">(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry)</span> &#123;</span><br><span class="line">        <span class="comment">//get the scan annotation and the bean package to be scanned</span></span><br><span class="line">        String[] scanBasePackages = fetchScanBasePackage(importingClassMetadata);</span><br><span class="line">        LogUtil.info(<span class="string">&quot;scanning packages: [&#123;&#125;]&quot;</span>, (Object) scanBasePackages);</span><br><span class="line">        </span><br><span class="line"><span class="comment">//        //scan the package and register the bean</span></span><br><span class="line"><span class="comment">//        RpcBeanScanner rpcConsumerBeanScanner = new RpcBeanScanner(registry, RpcConsumer.class);</span></span><br><span class="line">        <span class="type">RpcBeanScanner</span> <span class="variable">rpcProviderBeanScanner</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RpcBeanScanner</span>(registry, RpcProvider.class);</span><br><span class="line">        <span class="type">RpcBeanScanner</span> <span class="variable">springBeanScanner</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">RpcBeanScanner</span>(registry, Component.class);</span><br><span class="line">        <span class="keyword">if</span> (resourceLoader != <span class="literal">null</span>) &#123;</span><br><span class="line">            springBeanScanner.setResourceLoader(resourceLoader);</span><br><span class="line">            rpcProviderBeanScanner.setResourceLoader(resourceLoader);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">int</span> <span class="variable">rpcServiceCount</span> <span class="operator">=</span> rpcProviderBeanScanner.scan(scanBasePackages);</span><br><span class="line">        LogUtil.info(<span class="string">&quot;rpcServiceScanner扫描的数量 [&#123;&#125;]&quot;</span>, rpcServiceCount);</span><br><span class="line">        LogUtil.info(<span class="string">&quot;scanning RpcConsumer annotated beans end&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setResourceLoader</span><span class="params">(ResourceLoader resourceLoader)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.resourceLoader = resourceLoader;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> String[] fetchScanBasePackage(AnnotationMetadata importingClassMetadata)&#123;</span><br><span class="line">        <span class="type">AnnotationAttributes</span> <span class="variable">annotationAttributes</span> <span class="operator">=</span> AnnotationAttributes.fromMap(importingClassMetadata.getAnnotationAttributes(SimpleRpcApplication.class.getName()));</span><br><span class="line">        String[] scanBasePackages = <span class="keyword">new</span> <span class="title class_">String</span>[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">if</span> (annotationAttributes != <span class="literal">null</span>) &#123;</span><br><span class="line">            scanBasePackages = annotationAttributes.getStringArray(API_SCAN_PARAM);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//user doesn&#x27;t specify the package to scan,use the Application base package</span></span><br><span class="line">        <span class="keyword">if</span> (scanBasePackages.length == <span class="number">0</span>) &#123;</span><br><span class="line">            scanBasePackages = <span class="keyword">new</span> <span class="title class_">String</span>[]&#123;((org.springframework.core.type.StandardAnnotationMetadata) importingClassMetadata).getIntrospectedClass().getPackage().getName()&#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> scanBasePackages;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="Register-the-service-and-associated-configuration-before-the-bean-is-initialised-to-ensure-that-the-service-is-registered-when-spring-starts"><a href="#Register-the-service-and-associated-configuration-before-the-bean-is-initialised-to-ensure-that-the-service-is-registered-when-spring-starts" class="headerlink" title="Register the service and associated configuration before the bean is initialised to ensure that the service is registered when spring starts"></a>Register the service and associated configuration before the bean is initialised to ensure that the service is registered when spring starts</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RpcBeanPostProcessor</span> <span class="keyword">implements</span> <span class="title class_">BeanPostProcessor</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> RpcServiceRegistryAdapter adapter;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> RpcSendingServiceAdapter  sendingServiceAdapter;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">RpcBeanPostProcessor</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.adapter = SingletonFactory.getInstance(RpcServiceRegistryAdapterImpl.class);;</span><br><span class="line">        <span class="built_in">this</span>.sendingServiceAdapter = ExtensionLoader.getExtensionLoader(RpcSendingServiceAdapter.class)</span><br><span class="line">            .getExtension(RpcRequestSendingEnum.NETTY.getName());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * register service</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> bean</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> beanName</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> BeansException</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">postProcessBeforeInitialization</span><span class="params">(Object bean, String beanName)</span> <span class="keyword">throws</span> BeansException &#123;</span><br><span class="line">        LogUtil.info(<span class="string">&quot;start process register service: &#123;&#125;&quot;</span>, bean);</span><br><span class="line">        <span class="comment">// register service</span></span><br><span class="line">        <span class="keyword">if</span> (bean.getClass().isAnnotationPresent(RpcProvider.class)) &#123;</span><br><span class="line">            <span class="type">RpcProvider</span> <span class="variable">annotation</span> <span class="operator">=</span> bean.getClass().getAnnotation(RpcProvider.class);</span><br><span class="line">            <span class="comment">// build rpc service config</span></span><br><span class="line">            <span class="type">RpcServiceConfig</span> <span class="variable">serviceConfig</span> <span class="operator">=</span> RpcServiceConfig.builder()</span><br><span class="line">                .service(bean)</span><br><span class="line">                .project(annotation.project())</span><br><span class="line">                .version(annotation.version())</span><br><span class="line">                .group(annotation.group())</span><br><span class="line">                .build();</span><br><span class="line">            LogUtil.info(<span class="string">&quot;register service: &#123;&#125;&quot;</span>, serviceConfig);</span><br><span class="line">            adapter.registryService(serviceConfig);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> bean;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="A-concrete-way-to-implement-service-registration"><a href="#A-concrete-way-to-implement-service-registration" class="headerlink" title="A concrete way to implement service registration"></a>A concrete way to implement service registration</h5><p>To register a service, you should at least include: the service provider (ip), the service name, and the variables in @<code>RpcProvider``, so you can start by defining a</code>RpcServiceConfig<code></code>.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@NoArgsConstructor</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="meta">@Builder</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RpcServiceConfig</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * service version</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">version</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * target service</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Object service;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * belong to which project</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">project</span> <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * group</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">group</span>   <span class="operator">=</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * generate service name,use to distinguish different service,and * can be split to get the service name</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">fetchRpcServiceName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.getProject() + <span class="string">&quot;*&quot;</span> + <span class="built_in">this</span>.getGroup() + <span class="string">&quot;*&quot;</span> + <span class="built_in">this</span>.getServiceName() + <span class="string">&quot;*&quot;</span> + <span class="built_in">this</span>.getVersion();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * get the interface name</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getServiceName</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.service.getClass().getInterfaces()[<span class="number">0</span>].getCanonicalName();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>Provides 2 methods to register a service and get the corresponding bean based on the service name</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">RpcServiceRegistryAdapter</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> rpcServiceConfig rpc service related attributes</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">registryService</span><span class="params">(RpcServiceConfig rpcServiceConfig)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> rpcClassName rpc class name</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> service object</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    Object <span class="title function_">getService</span><span class="params">(String rpcClassName)</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The registration process can be divided into 3 steps, generate the address -&gt; service registration into Zookeeper -&gt; registration into the cache. Here a ConcurrentHashMap is used to cache the service (the api of zookeeper is called at the end of the method for registration, which is skipped because it is not very relevant to RPC, so you can directly refer to the source code).</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RpcServiceRegistryAdapterImpl</span> <span class="keyword">implements</span> <span class="title class_">RpcServiceRegistryAdapter</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * cache map</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Map&lt;String, Object&gt; serviceMap = <span class="keyword">new</span> <span class="title class_">ConcurrentHashMap</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">registryService</span><span class="params">(RpcServiceConfig rpcServiceConfig)</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// first get address and service</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">hostAddress</span> <span class="operator">=</span> InetAddress.getLocalHost().getHostAddress();</span><br><span class="line">            <span class="comment">// add service to zk</span></span><br><span class="line">            LogUtil.info(<span class="string">&quot;add service to zk,service name&#123;&#125;,host:&#123;&#125;&quot;</span>, rpcServiceConfig.fetchRpcServiceName(),hostAddress);</span><br><span class="line">            registerServiceToZk(rpcServiceConfig.fetchRpcServiceName(),</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">InetSocketAddress</span>(hostAddress, PropertiesFileUtil.readPortFromProperties()));</span><br><span class="line">            <span class="comment">// add service to map cache</span></span><br><span class="line">            registerServiceToMap(rpcServiceConfig);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (UnknownHostException e) &#123;</span><br><span class="line">            LogUtil.error(<span class="string">&quot;occur exception when getHostAddress&quot;</span>, e);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">getService</span><span class="params">(String rpcServiceName)</span> &#123;</span><br><span class="line">        <span class="type">Object</span> <span class="variable">service</span> <span class="operator">=</span> serviceMap.get(rpcServiceName);</span><br><span class="line">        <span class="keyword">if</span> (<span class="literal">null</span> == service) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RpcException</span>(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_FOUND.getCode(),<span class="string">&quot;service not found&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> service;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">registerServiceToZk</span><span class="params">(String rpcServiceName, InetSocketAddress inetSocketAddress)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">servicePath</span> <span class="operator">=</span> CuratorClient.ZK_REGISTER_ROOT_PATH + <span class="string">&quot;/&quot;</span> + rpcServiceName + inetSocketAddress.toString();</span><br><span class="line">        <span class="type">CuratorFramework</span> <span class="variable">zkClient</span> <span class="operator">=</span> CuratorClient.getZkClient();</span><br><span class="line">        CuratorClient.createPersistentNode(zkClient, servicePath);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">registerServiceToMap</span><span class="params">(RpcServiceConfig rpcServiceConfig)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">rpcServiceName</span> <span class="operator">=</span> rpcServiceConfig.fetchRpcServiceName();</span><br><span class="line">        <span class="keyword">if</span> (serviceMap.containsKey(rpcServiceName)) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        serviceMap.put(rpcServiceName, rpcServiceConfig.getService());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>​    At this point, the registration process for a service is complete.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/en/tags/project/" rel="tag"># project</a>
+              <a href="/en/tags/java/" rel="tag"># java</a>
+              <a href="/en/tags/Rpc/" rel="tag"># Rpc</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/en/2023/05/21/LeetCode/LeetCode-005/" rel="prev" title="LeetCode-005,How to think step by step to dynamic planning">
+      <i class="fa fa-chevron-left"></i> LeetCode-005,How to think step by step to dynamic planning
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#based-on-springBoot-hand-written-a-simple-RPC-framework-1"><span class="nav-number">1.</span> <span class="nav-text">based on springBoot, hand-written a simple RPC framework(1)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Code-pjpjsocute-rpc-service-personal-rcp-attempt-github-com"><span class="nav-number">1.1.</span> <span class="nav-text">Code:pjpjsocute&#x2F;rpc-service: personal rcp attempt (github.com)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Technology-stack-use-includes-springboot-Zookeeper-netty-java-spi"><span class="nav-number">1.2.</span> <span class="nav-text">Technology stack use includes:springboot,Zookeeper,netty,java spi</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC-Definition"><span class="nav-number">1.3.</span> <span class="nav-text">RPC Definition</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#rpc-vs-http-discrimination"><span class="nav-number">1.3.1.</span> <span class="nav-text">rpc vs. http discrimination:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RPC-process"><span class="nav-number">1.4.</span> <span class="nav-text">RPC process</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#How-to-achieve"><span class="nav-number">1.5.</span> <span class="nav-text">How to achieve:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-simple-RPC-call-link"><span class="nav-number">1.5.1.</span> <span class="nav-text">A simple RPC call link:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#server-side-implementation-based-on-netty-and-ZK"><span class="nav-number">1.6.</span> <span class="nav-text">server-side implementation based on netty and ZK</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Service-registration"><span class="nav-number">1.6.1.</span> <span class="nav-text">Service registration:</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Define-registration-annotations"><span class="nav-number">1.6.1.1.</span> <span class="nav-text">Define registration annotations</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Registering-services-at-startup"><span class="nav-number">1.6.1.2.</span> <span class="nav-text">Registering services at startup</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#First-the-annotation-with-provider-needs-to-be-registered"><span class="nav-number">1.6.1.2.1.</span> <span class="nav-text">First, the annotation with @provider needs to be registered</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Register-the-service-and-associated-configuration-before-the-bean-is-initialised-to-ensure-that-the-service-is-registered-when-spring-starts"><span class="nav-number">1.6.1.2.2.</span> <span class="nav-text">Register the service and associated configuration before the bean is initialised to ensure that the service is registered when spring starts</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#A-concrete-way-to-implement-service-registration"><span class="nav-number">1.6.1.2.3.</span> <span class="nav-text">A concrete way to implement service registration</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Ray zhou</p>
+  <div class="site-description" itemprop="description">My bolg</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/en/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/en/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/en/tags/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ray zhou</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/en/lib/anime.min.js"></script>
+  <script src="/en/lib/velocity/velocity.min.js"></script>
+  <script src="/en/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/en/js/utils.js"></script>
+
+<script src="/en/js/motion.js"></script>
+
+
+<script src="/en/js/schemes/muse.js"></script>
+
+
+<script src="/en/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'tHsqv8rp8m3NFxGeqNYcSMkI-MdYXbMMI',
+      appKey     : 'Ly0JgGKm82bkdfXMxPbisC2p',
+      placeholder: "Enter your comments",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : false,
+      lang       : 'en' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : false,
+      serverURLs : 'https://thsqv8rp.api.lncldglobal.com'
+    });
+  }, window.Valine);
+});
+</script>
+
+</body>
+</html>
